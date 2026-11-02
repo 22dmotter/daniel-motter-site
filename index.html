@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Daniel Motter | Getting Out of Debt, God's Way</title>
+<meta name="description" content="Daniel Motter's debt-payoff journey: real numbers, honest videos, and faith-driven steps to becoming debt-free.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<style>
+nav ul a.active{color:var(--accent)}
+:root{--bg:#0b0d10;--bg2:#13161b;--line:#232830;--text:#f4f5f7;--muted:#9aa3ae;--accent:#ff3b3b;--accent-ink:#ffffff;--radius:14px;--max:1080px}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:Inter,system-ui,sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:"Space Grotesk",Inter,sans-serif;line-height:1.05;letter-spacing:-.02em}
+a{color:inherit}
+.wrap{max-width:var(--max);margin:0 auto;padding:0 20px}
+.ph{background:rgba(255,59,59,.14);color:var(--accent);border:1px dashed var(--accent);border-radius:6px;padding:0 6px;font-size:.85em;white-space:nowrap}
+/* nav */
+nav{position:sticky;top:0;z-index:10;background:rgba(11,13,16,.85);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;align-items:center;justify-content:space-between;height:60px}
+.logo{font-family:"Space Grotesk";font-weight:700;font-size:1.15rem;text-decoration:none}
+.logo span{color:var(--accent)}
+nav ul{display:none;list-style:none;gap:28px}
+nav ul a{text-decoration:none;color:var(--muted);font-size:.95rem}
+nav ul a:hover{color:var(--text)}
+.btn{display:inline-block;background:var(--accent);color:var(--accent-ink);font-weight:600;text-decoration:none;padding:12px 20px;border-radius:999px;border:0;cursor:pointer;font-size:1rem;font-family:inherit;transition:transform .15s}
+.btn:hover{transform:translateY(-2px)}
+.btn.ghost{background:transparent;color:var(--text);border:1px solid var(--line)}
+.btn.sm{padding:8px 16px;font-size:.9rem}
+/* hero */
+.hero{padding:72px 0 56px}
+.eyebrow{display:inline-block;color:var(--accent);font-size:.8rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;margin-bottom:18px}
+.hero h1{font-size:clamp(2.6rem,9vw,5.4rem);margin-bottom:22px}
+.hero h1 em{font-style:normal;color:var(--accent)}
+.hero p.lead{font-size:1.15rem;color:var(--muted);max-width:560px;margin-bottom:30px}
+.cta-row{display:flex;flex-wrap:wrap;gap:12px}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:52px}
+.stat{background:var(--bg2);border:1px solid var(--line);border-radius:var(--radius);padding:20px}
+.stat b{display:block;font-family:"Space Grotesk";font-size:1.8rem}
+.stat small{color:var(--muted);font-size:.85rem}
+.progress{grid-column:1/-1}
+.bar{height:10px;background:var(--line);border-radius:999px;overflow:hidden;margin:12px 0 6px}
+.bar i{display:block;height:100%;width:35%;background:var(--accent);border-radius:999px}
+/* sections */
+section{padding:72px 0;border-top:1px solid var(--line)}
+.sec-head{margin-bottom:32px}
+.sec-head h2{font-size:clamp(2rem,6vw,3rem);margin-bottom:10px}
+.sec-head p{color:var(--muted);max-width:600px}
+.about{display:grid;gap:32px}
+.portrait{aspect-ratio:4/5;background:linear-gradient(135deg,#1a1f26,#0f1216);border:1px solid var(--line);border-radius:var(--radius);display:grid;place-items:center;color:var(--muted);font-size:.9rem;max-width:380px}
+.about p{margin-bottom:16px;color:#d3d7dd}
+blockquote{border-left:3px solid var(--accent);padding:6px 0 6px 18px;margin:24px 0;font-family:"Space Grotesk";font-size:1.25rem}
+blockquote cite{display:block;font-family:Inter;font-size:.85rem;color:var(--muted);font-style:normal;margin-top:6px}
+.videos{display:grid;gap:18px}
+.video{background:var(--bg2);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
+.embed{aspect-ratio:16/9;background:#000;display:grid;place-items:center;color:var(--muted);font-size:.9rem;text-align:center;padding:12px}
+.embed iframe{width:100%;height:100%;border:0}
+.video .meta{padding:16px 18px}
+.video .meta span{color:var(--accent);font-size:.75rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase}
+.video h3{font-size:1.15rem;margin-top:6px}
+.center{text-align:center;margin-top:32px}
+.story{background:var(--bg2);border:1px solid var(--line);border-radius:var(--radius);padding:28px}
+.story h3{font-size:1.6rem;margin-bottom:10px}
+.story p{color:var(--muted)}
+/* signup */
+.signup{background:var(--accent);color:var(--accent-ink);border-radius:22px;padding:40px 24px}
+.signup h2{font-size:clamp(2rem,6vw,3rem);margin-bottom:12px}
+.signup p{max-width:520px;margin-bottom:24px;opacity:.85}
+.signup form{display:grid;gap:10px;max-width:560px}
+.signup input{padding:14px 16px;border-radius:999px;border:2px solid var(--accent-ink);background:#fff;font-size:1rem;font-family:inherit}
+.signup .btn{background:var(--accent-ink);color:var(--accent)}
+.signup .fine{font-size:.8rem;margin:12px 0 0;opacity:.7}
+.thanks{display:none;font-weight:600;font-size:1.1rem}
+footer{border-top:1px solid var(--line);padding:40px 0;color:var(--muted);font-size:.9rem}
+footer .wrap{display:grid;gap:20px}
+footer .links{display:flex;flex-wrap:wrap;gap:20px}
+footer a{text-decoration:none}footer a:hover{color:var(--text)}
+@media(min-width:760px){
+ nav ul{display:flex}
+ .hero{padding:110px 0 80px}
+ .stats{grid-template-columns:repeat(3,1fr)}
+ .about{grid-template-columns:380px 1fr;align-items:center}
+ .videos{grid-template-columns:repeat(3,1fr)}
+ .signup{padding:64px}
+ .signup form{grid-template-columns:1fr 1fr auto}
+ footer .wrap{grid-template-columns:1fr auto;align-items:center}
+}
+</style>
+</head>
+<body>
+
+<nav><div class="wrap">
+ <a href="index.html" class="logo">Daniel Motter<span>.</span></a>
+ <ul><li><a href="index.html" class="active">Home</a></li><li><a href="about.html">About</a></li><li><a href="channel.html">Channel</a></li></ul>
+ <a href="#tracker" class="btn sm">Free Tracker</a>
+</div></nav>
+
+<header class="hero"><div class="wrap">
+ <span class="eyebrow">Faith · Grit · Real Numbers</span>
+ <h1>Becoming <em>debt-free</em>,<br>one payment at a time.</h1>
+ <p class="lead">I'm paying off every dollar I owe and showing you the real numbers along the way. No gimmicks, just discipline, a plan, and a God who provides.</p>
+ <div class="cta-row">
+  <a href="#tracker" class="btn">Get the free debt tracker</a>
+  <a href="#journey" class="btn ghost">Watch the journey</a>
+ </div>
+ <div class="stats">
+  <div class="stat"><b><span class="ph">$XX,XXX</span></b><small>Starting debt</small></div>
+  <div class="stat"><b><span class="ph">$XX,XXX</span></b><small>Paid off so far</small></div>
+  <div class="stat"><b><span class="ph">XX</span></b><small>Months in</small></div>
+  <div class="stat progress"><small>Progress to debt-free <span class="ph">placeholder 35%</span></small><div class="bar"><i></i></div></div>
+ </div>
+</div></header>
+
+<section id="about"><div class="wrap about">
+ <div class="portrait">[ Photo of Daniel ]</div>
+ <div>
+  <span class="eyebrow">Hey, I'm Daniel</span>
+  <h2 style="font-size:clamp(2rem,6vw,3rem);margin-bottom:18px">Just a guy who got tired of owing.</h2>
+  <p>I'm a recent Lee University grad, newly married, and working to get out of debt for good. This channel started as a way to keep myself honest, and it turned into a place where we figure this out together.</p>
+  <p><span class="ph">PLACEHOLDER: one or two sentences on why you started, e.g. the moment you decided enough was enough.</span></p>
+  <blockquote>"The rich rule over the poor, and the borrower is slave to the lender."<cite>Proverbs 22:7</cite></blockquote>
+  <p>I want to be free so we can give generously, live with peace, and steward well what God's given us.</p>
+ </div>
+</div></section>
+
+<section id="journey"><div class="wrap">
+ <div class="sec-head"><span class="eyebrow">The Payoff Journey</span><h2>Every dollar, on camera.</h2><p>Monthly updates, budget breakdowns, and the wins and setbacks in between.</p></div>
+ <div class="videos">
+  <!-- Replace each .embed contents with: <iframe src="https://www.youtube.com/embed/VIDEO_ID" allowfullscreen></iframe> -->
+  <article class="video"><div class="embed">[ VIDEO EMBED PLACEHOLDER ]</div><div class="meta"><span>Episode 1</span><h3>Where it started: my total debt revealed</h3></div></article>
+  <article class="video"><div class="embed">[ VIDEO EMBED PLACEHOLDER ]</div><div class="meta"><span>Budget</span><h3>How we budget on <span class="ph">$X,XXX</span>/month</h3></div></article>
+  <article class="video"><div class="embed">[ VIDEO EMBED PLACEHOLDER ]</div><div class="meta"><span>Update</span><h3>Month <span class="ph">XX</span> payoff update</h3></div></article>
+ </div>
+ <div class="center"><a href="https://youtube.com/@DanielMotter" class="btn ghost" target="_blank" rel="noopener">Subscribe on YouTube <span class="ph">add channel URL</span></a></div>
+</div></section>
+
+<section id="tracker" style="border-top:0"><div class="wrap">
+ <div class="signup">
+  <h2>Get the free debt tracker.</h2>
+  <p>The same simple tracker I use to watch every balance shrink, plus a short weekly email with my real numbers and one encouraging verse.</p>
+  <form id="signup" action="#" method="post">
+   <!-- Connect to your email provider: set action to your form endpoint (e.g. Kit/ConvertKit, MailerLite, Formspree). -->
+   <input type="text" name="first_name" placeholder="First name" required aria-label="First name">
+   <input type="email" name="email" placeholder="Email address" required aria-label="Email address">
+   <button class="btn" type="submit">Send it to me</button>
+  </form>
+  <p class="thanks" id="thanks">You're in! Check your inbox for the tracker.</p>
+  <p class="fine">No spam, ever. Unsubscribe anytime.</p>
+ </div>
+</div></section>
+
+<footer><div class="wrap">
+ <div><strong style="color:var(--text)">Daniel Motter</strong><br>"Let no debt remain outstanding, except the continuing debt to love one another." Romans 13:8</div>
+ <div class="links"><a href="about.html">About</a><a href="channel.html">Channel</a><a href="#tracker">Free Tracker</a><a href="mailto:hello@example.com">Contact <span class="ph">email</span></a></div>
+ <div style="grid-column:1/-1;font-size:.8rem">© <span id="yr"></span> Daniel Motter. Not financial advice; just my story.</div>
+</div></footer>
+
+<script>
+document.getElementById('yr').textContent=new Date().getFullYear();
+document.getElementById('signup').addEventListener('submit',function(e){
+ if(this.getAttribute('action')==='#'){e.preventDefault();this.style.display='none';document.getElementById('thanks').style.display='block';}
+});
+</script>
+</body>
+</html>
