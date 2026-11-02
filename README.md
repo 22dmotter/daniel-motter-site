@@ -18,13 +18,13 @@ A single self-contained `index.html` (embedded CSS, only Google Fonts loaded ext
 Drag the folder onto Netlify Drop, or push to GitHub Pages / Cloudflare Pages.
 
 ## New pages
-- **about.html**: who Daniel is, placeholder payoff stats, faith section (Proverbs 22:7, Romans 13:8), what he offers (channel, upcoming PDF guide, coaching, affiliate tools like Dollarwise), and a call-to-action to the Channel page.
+- **about.html**: who Daniel is, placeholder payoff stats, faith section (Romans 13:8), what he offers (channel, upcoming PDF guide, coaching, affiliate tools like Dollarwise), and a call-to-action to the Channel page.
 - **channel.html**: subscribe buttons, featured video slots, and what viewers will find.
 - All three pages share the same nav (Home, About, Channel) and footer.
 
 ## YouTube link
-The placeholder channel URL is `https://youtube.com/@DanielMotter`. To swap in the real one, find and replace that string across `index.html`, `about.html`, and `channel.html`, e.g.:
-`sed -i 's#https://youtube.com/@DanielMotter#https://youtube.com/@YOURHANDLE#g' *.html`
+The channel URL is `https://www.youtube.com/@danielmotter62`. To swap in the real one, find and replace that string across `index.html`, `about.html`, and `channel.html`, e.g.:
+`sed -i 's#https://www.youtube.com/@danielmotter62#https://youtube.com/@YOURHANDLE#g' *.html`
 
 ## Debt numbers and month counter
 At the bottom of `index.html` and `about.html`, edit `DEBT_START` and `PAID` to update the totals; the progress bar and "left to go" calculate automatically. "Months in" counts up automatically on the 3rd of each month, starting at 1 on Nov 3, 2026.
