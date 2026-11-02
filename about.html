@@ -122,13 +122,13 @@ nav ul a.active{color:var(--accent)}
 </div></section>
 
 <section><div class="wrap">
- <div class="sec-head"><span class="eyebrow">The journey so far</span><h2>The real numbers.</h2><p>I share every number, good or bad. These get updated as I go. <span class="ph">All stats below are placeholders</span></p></div>
+ <div class="sec-head"><span class="eyebrow">The journey so far</span><h2>The real numbers.</h2><p>I share every number, good or bad. These get updated as I go. <span class="ph">Target date is a placeholder</span></p></div>
  <div class="stats" style="margin-top:0">
-  <div class="stat"><b><span class="ph">$XX,XXX</span></b><small>Total debt when I started</small></div>
-  <div class="stat"><b><span class="ph">$XX,XXX</span></b><small>Paid off so far</small></div>
-  <div class="stat"><b><span class="ph">$XX,XXX</span></b><small>Left to go</small></div>
-  <div class="stat"><b><span class="ph">X</span></b><small>Debts fully paid off</small></div>
-  <div class="stat"><b><span class="ph">XX</span></b><small>Months on the journey</small></div>
+  <div class="stat"><b class="debt-start">$49,113.44</b><small>Total debt when I started</small></div>
+  <div class="stat"><b class="debt-paid">$0.00</b><small>Paid off so far</small></div>
+  <div class="stat"><b class="debt-left">$49,113.44</b><small>Left to go</small></div>
+  <div class="stat"><b>0</b><small>Debts fully paid off</small></div>
+  <div class="stat"><b class="months-in">1</b><small>Months on the journey (started Nov 3, 2026)</small></div>
   <div class="stat"><b><span class="ph">Mon YYYY</span></b><small>Target debt-free date</small></div>
  </div>
 </div></section>
@@ -168,5 +168,22 @@ nav ul a.active{color:var(--accent)}
  <div style="grid-column:1/-1;font-size:.8rem">© <span id="yr"></span> Daniel Motter. Not financial advice; just my story.</div>
 </div></footer>
 <script>document.getElementById('yr').textContent=new Date().getFullYear();</script>
+<script>
+/* Debt numbers: edit these two values to update the site */
+var DEBT_START=49113.44, PAID=0;
+(function(){
+ var s=new Date(2026,10,3),n=new Date();
+ var m=(n.getFullYear()-s.getFullYear())*12+(n.getMonth()-s.getMonth())+(n.getDate()>=3?1:0);
+ if(m<1)m=1; /* journey starts Nov 3, 2026 = month 1 */
+ document.querySelectorAll('.months-in').forEach(function(e){e.textContent=m});
+ var f=function(x){return '$'+x.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})};
+ document.querySelectorAll('.debt-start').forEach(function(e){e.textContent=f(DEBT_START)});
+ document.querySelectorAll('.debt-paid').forEach(function(e){e.textContent=f(PAID)});
+ document.querySelectorAll('.debt-left').forEach(function(e){e.textContent=f(DEBT_START-PAID)});
+ var p=Math.min(100,PAID/DEBT_START*100);
+ document.querySelectorAll('.pct').forEach(function(e){e.textContent=p.toFixed(1)+'%'});
+ document.querySelectorAll('.bar i').forEach(function(e){e.style.width=p+'%'});
+})();
+</script>
 </body>
 </html>

@@ -43,7 +43,7 @@ nav ul a:hover{color:var(--text)}
 .stat small{color:var(--muted);font-size:.85rem}
 .progress{grid-column:1/-1}
 .bar{height:10px;background:var(--line);border-radius:999px;overflow:hidden;margin:12px 0 6px}
-.bar i{display:block;height:100%;width:35%;background:var(--accent);border-radius:999px}
+.bar i{display:block;height:100%;width:0%;background:var(--accent);border-radius:999px}
 /* sections */
 section{padding:72px 0;border-top:1px solid var(--line)}
 .sec-head{margin-bottom:32px}
@@ -107,12 +107,18 @@ footer a{text-decoration:none}footer a:hover{color:var(--text)}
   <a href="#journey" class="btn ghost">Watch the journey</a>
  </div>
  <div class="stats">
-  <div class="stat"><b><span class="ph">$XX,XXX</span></b><small>Starting debt</small></div>
-  <div class="stat"><b><span class="ph">$XX,XXX</span></b><small>Paid off so far</small></div>
-  <div class="stat"><b><span class="ph">XX</span></b><small>Months in</small></div>
-  <div class="stat progress"><small>Progress to debt-free <span class="ph">placeholder 35%</span></small><div class="bar"><i></i></div></div>
+  <div class="stat"><b class="debt-start">$49,113.44</b><small>Starting debt</small></div>
+  <div class="stat"><b class="debt-paid">$0.00</b><small>Paid off so far</small></div>
+  <div class="stat"><b class="months-in">1</b><small>Months in (started Nov 3, 2026)</small></div>
+  <div class="stat progress"><small>Progress to debt-free: <strong class="pct" style="color:var(--accent)">0.0%</strong></small><div class="bar"><i></i></div></div>
  </div>
 </div></header>
+
+<section id="mission"><div class="wrap">
+ <div class="sec-head" style="margin-bottom:0"><span class="eyebrow">My goal</span><h2>Get free, then help you get free.</h2>
+ <p>Paying off my own debt is only half of it. My real goal is to help others get out of debt too, by showing exactly what works, what doesn't, and how faith keeps you going when the numbers feel heavy.</p>
+ <p style="margin-top:14px;color:var(--text)"><strong style="color:var(--accent)">New episodes every week.</strong> Stay tuned.</p></div>
+</div></section>
 
 <section id="about"><div class="wrap about">
  <div class="portrait">[ Photo of Daniel ]</div>
@@ -163,6 +169,23 @@ document.getElementById('yr').textContent=new Date().getFullYear();
 document.getElementById('signup').addEventListener('submit',function(e){
  if(this.getAttribute('action')==='#'){e.preventDefault();this.style.display='none';document.getElementById('thanks').style.display='block';}
 });
+</script>
+<script>
+/* Debt numbers: edit these two values to update the site */
+var DEBT_START=49113.44, PAID=0;
+(function(){
+ var s=new Date(2026,10,3),n=new Date();
+ var m=(n.getFullYear()-s.getFullYear())*12+(n.getMonth()-s.getMonth())+(n.getDate()>=3?1:0);
+ if(m<1)m=1; /* journey starts Nov 3, 2026 = month 1 */
+ document.querySelectorAll('.months-in').forEach(function(e){e.textContent=m});
+ var f=function(x){return '$'+x.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})};
+ document.querySelectorAll('.debt-start').forEach(function(e){e.textContent=f(DEBT_START)});
+ document.querySelectorAll('.debt-paid').forEach(function(e){e.textContent=f(PAID)});
+ document.querySelectorAll('.debt-left').forEach(function(e){e.textContent=f(DEBT_START-PAID)});
+ var p=Math.min(100,PAID/DEBT_START*100);
+ document.querySelectorAll('.pct').forEach(function(e){e.textContent=p.toFixed(1)+'%'});
+ document.querySelectorAll('.bar i').forEach(function(e){e.style.width=p+'%'});
+})();
 </script>
 </body>
 </html>

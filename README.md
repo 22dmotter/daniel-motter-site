@@ -26,3 +26,6 @@ Drag the folder onto Netlify Drop, or push to GitHub Pages / Cloudflare Pages.
 ## YouTube link
 The placeholder channel URL is `https://youtube.com/@DanielMotter`. To swap in the real one, find and replace that string across `index.html`, `about.html`, and `channel.html`, e.g.:
 `sed -i 's#https://youtube.com/@DanielMotter#https://youtube.com/@YOURHANDLE#g' *.html`
+
+## Debt numbers and month counter
+At the bottom of `index.html` and `about.html`, edit `DEBT_START` and `PAID` to update the totals; the progress bar and "left to go" calculate automatically. "Months in" counts up automatically on the 3rd of each month, starting at 1 on Nov 3, 2026.
