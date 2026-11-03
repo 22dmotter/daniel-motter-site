@@ -27,7 +27,7 @@ The channel URL is `https://www.youtube.com/@danielmotter62`. To swap in the rea
 `sed -i 's#https://www.youtube.com/@danielmotter62#https://youtube.com/@YOURHANDLE#g' *.html`
 
 ## Debt numbers and month counter
-At the bottom of `index.html` and `about.html`, edit `DEBT_START` and `PAID` to update the totals; the progress bar and "left to go" calculate automatically. "Months in" counts up automatically on the 3rd of each month, starting at 1 on Nov 3, 2026.
+At the bottom of `index.html` and `about.html`, edit `DEBT_START` and `PAID` to update the totals; the progress bar and "left to go" calculate automatically. The day counter goes up by one every day, starting at 1 on Nov 3, 2026.
 
 ## SEO
 Each page has a keyword-focused title and description, a canonical URL, Open Graph/Twitter tags for link previews, and schema.org structured data. `robots.txt` and `sitemap.xml` are included. All URLs use `https://danielmottersite.netlify.app`; if you add a custom domain, find-and-replace that address across the HTML, `robots.txt`, and `sitemap.xml`.

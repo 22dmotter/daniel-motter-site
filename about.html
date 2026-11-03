@@ -147,7 +147,7 @@ nav ul a.active{color:var(--accent)}
   <div class="stat"><b class="debt-paid">$0.00</b><small>Paid off so far</small></div>
   <div class="stat"><b class="debt-left">$49,113.44</b><small>Left to go</small></div>
   <div class="stat"><b>0</b><small>Debts fully paid off</small></div>
-  <div class="stat"><b class="months-in">1</b><small>Months on the journey (started Nov 3, 2026)</small></div>
+  <div class="stat"><b class="days-in">1</b><small>Days on the journey (started Nov 3, 2026)</small></div>
   <div class="stat"><b>Nov 3, 2027</b><small>Target debt-free date</small></div>
  </div>
 </div></section>
@@ -192,10 +192,10 @@ nav ul a.active{color:var(--accent)}
 /* Debt numbers: edit these two values to update the site */
 var DEBT_START=49113.44, PAID=0;
 (function(){
- var s=new Date(2026,10,3),n=new Date();
- var m=(n.getFullYear()-s.getFullYear())*12+(n.getMonth()-s.getMonth())+(n.getDate()>=3?1:0);
- if(m<1)m=1; /* journey starts Nov 3, 2026 = month 1 */
- document.querySelectorAll('.months-in').forEach(function(e){e.textContent=m});
+ var s=new Date(2026,10,3),n=new Date(),t=new Date(n.getFullYear(),n.getMonth(),n.getDate());
+ var d=Math.round((t-s)/864e5)+1;
+ if(d<1)d=1; /* journey starts Nov 3, 2026 = day 1 */
+ document.querySelectorAll('.days-in').forEach(function(e){e.textContent=d.toLocaleString('en-US')});
  var f=function(x){return '$'+x.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})};
  document.querySelectorAll('.debt-start').forEach(function(e){e.textContent=f(DEBT_START)});
  document.querySelectorAll('.debt-paid').forEach(function(e){e.textContent=f(PAID)});
