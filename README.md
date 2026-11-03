@@ -31,3 +31,6 @@ At the bottom of `index.html` and `about.html`, edit `DEBT_START` and `PAID` to 
 
 ## SEO
 Each page has a keyword-focused title and description, a canonical URL, Open Graph/Twitter tags for link previews, and schema.org structured data. `robots.txt` and `sitemap.xml` are included. All URLs use `https://danielmottersite.netlify.app`; if you add a custom domain, find-and-replace that address across the HTML, `robots.txt`, and `sitemap.xml`.
+
+## Why Debt Is Bad page
+`why-debt-is-bad.html`: an SEO article (Article, FAQ, and breadcrumb structured data) covering 7 reasons debt is bad, Romans 13:8, Daniel's story, and an FAQ. Linked in the nav and footer of every page and in `sitemap.xml`.
