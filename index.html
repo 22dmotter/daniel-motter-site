@@ -108,6 +108,7 @@ html{background:#0b0d10}body{background:transparent}
 .debt-start{color:#ff3b3b}.debt-paid{color:#22c55e}
 
 /* ---- sleek refresh ---- */
+@media(min-width:760px){.stats.four{grid-template-columns:repeat(4,1fr)}}
 body{letter-spacing:-.005em}
 h1,h2,h3{letter-spacing:-.035em}
 .hero h1{font-weight:700;background:linear-gradient(180deg,#fff 30%,#b9bec7);-webkit-background-clip:text;background-clip:text;color:transparent}
@@ -152,9 +153,10 @@ blockquote{border-left:2px solid;border-image:linear-gradient(#ff3b3b,#ff7a59) 1
   <a href="channel.html" class="btn">Watch my videos</a>
   <a href="#journey" class="btn ghost">Watch the journey</a>
  </div>
- <div class="stats">
+ <div class="stats four">
   <div class="stat"><b class="debt-start">$49,113.44</b><small>Starting debt</small></div>
   <div class="stat"><b class="debt-paid">$2.68</b><small>Paid off so far</small></div>
+  <div class="stat"><b class="debt-left">$49,110.76</b><small>Left to go</small></div>
   <div class="stat"><b class="days-in">1</b><small>Days in (started Nov 3, 2026)</small></div>
   <div class="stat progress"><small>Progress to debt-free: <strong class="pct" style="color:var(--accent)">0.0%</strong></small><div class="bar"><i></i></div></div>
  </div>
