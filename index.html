@@ -137,6 +137,12 @@ blockquote{border-left:2px solid;border-image:linear-gradient(#ff3b3b,#ff7a59) 1
 .reveal.in{opacity:1;transform:none}
 @media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none}*{transition:none!important}}
 ::selection{background:#ff3b3b;color:#fff}
+
+.shorts{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.short{border-radius:18px;overflow:hidden;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);aspect-ratio:9/16;position:relative}
+.short iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.short.soon{display:grid;place-items:center;text-align:center;color:var(--muted);font-size:.9rem;padding:16px;border-style:dashed}
+@media(min-width:760px){.shorts{grid-template-columns:repeat(4,1fr)}}
 </style>
 </head>
 <body>
@@ -191,6 +197,16 @@ blockquote{border-left:2px solid;border-image:linear-gradient(#ff3b3b,#ff7a59) 1
   <article class="video"><div class="embed"><span role="img" aria-label="Daniel Motter debt payoff video">[ VIDEO EMBED PLACEHOLDER ]</span></div><div class="meta"><span>Update</span><h3>Month <span class="ph">XX</span> payoff update</h3></div></article>
  </div>
  <div class="center"><a href="https://www.youtube.com/@danielmotter62" class="btn ghost" target="_blank" rel="noopener">Subscribe on YouTube</a></div>
+</div></section>
+
+<section id="shorts"><div class="wrap">
+ <div class="sec-head"><span class="eyebrow">Shorts</span><h2>Quick hits.</h2><p>Short, one-minute takes on getting out of debt.</p></div>
+ <div class="shorts">
+  <!-- Add more Shorts: copy a .short block and change the video ID after /embed/ -->
+  <div class="short"><iframe src="https://www.youtube.com/embed/ap-y7-83m4E" title="Daniel Motter YouTube Short" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
+  <div class="short soon">More Shorts coming soon</div>
+ </div>
+ <div class="center"><a href="https://www.youtube.com/@danielmotter62/shorts" class="btn ghost" target="_blank" rel="noopener">See all Shorts</a></div>
 </div></section>
 
 <section id="watch" style="border-top:0"><div class="wrap">
