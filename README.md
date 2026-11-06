@@ -34,3 +34,6 @@ Each page has a keyword-focused title and description, a canonical URL, Open Gra
 
 ## Get Out of Debt guide
 `get-out-of-debt.html`: a practical SEO guide with a working payoff calculator, why debt hurts, a 7-step plan, snowball vs. avalanche comparison, ways to find extra money, Romans 13:8, and an FAQ (Article, HowTo, FAQ, and breadcrumb structured data). The old `why-debt-is-bad.html` address redirects here via `_redirects` (Netlify).
+
+## Calculate Your Payment
+`calculate-your-payment.html`: a monthly payment calculator (payment needed to pay off one debt by a deadline) and an in-depth multi-debt payoff planner (snowball or avalanche, rolled-over payments, per-debt payoff order and month-by-month schedule). The math lives in `payment-calculator.js` and runs in the visitor's browser only. Run `node tests/payment-calculator.test.js` to check it.

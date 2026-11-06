@@ -164,12 +164,13 @@ nav ul a.active{color:var(--accent)}
 .toc a:hover{color:var(--text);border-color:var(--accent)}
 @media(min-width:760px){.calc{grid-template-columns:1fr 1fr;align-items:start}.wins{grid-template-columns:1fr 1fr}}
 </style>
+<style>@media(min-width:760px) and (max-width:1000px){nav ul{gap:16px}nav ul a{font-size:.85rem}}</style>
 </head>
 <body>
 
 <nav aria-label="Main navigation"><div class="wrap">
  <a href="index.html" class="logo">Daniel Motter<span>.</span></a>
- <ul><li><a href="index.html">Home</a></li><li><a href="about.html">About</a></li><li><a href="get-out-of-debt.html" class="active">Get Out of Debt</a></li><li><a href="channel.html">Channel</a></li></ul>
+ <ul><li><a href="index.html">Home</a></li><li><a href="about.html">About</a></li><li><a href="get-out-of-debt.html" class="active">Get Out of Debt</a></li><li><a href="calculate-your-payment.html">Calculate Your Payment</a></li><li><a href="channel.html">Channel</a></li></ul>
  <a href="channel.html" class="btn sm">Watch My Videos</a>
 </div></nav>
 
@@ -179,7 +180,7 @@ nav ul a.active{color:var(--accent)}
  <span class="eyebrow">Free guide</span>
  <h1>How to get out of debt, <em>step by step</em>.</h1>
  <p class="lead" style="font-size:1.15rem;color:var(--muted);max-width:660px">The plan I'm using to pay off $49,113.44, written so you can use it too. Run your own numbers, follow the steps, and start today.</p>
- <div class="toc"><a href="#calculator">Payoff calculator</a><a href="#why">Why debt hurts</a><a href="#steps">7-step plan</a><a href="#methods">Snowball vs. avalanche</a><a href="#extra">Find extra money</a><a href="#faq">FAQ</a></div>
+ <div class="toc"><a href="#calculator">Payoff calculator</a><a href="#why">Why debt hurts</a><a href="#steps">7-step plan</a><a href="#methods">Snowball vs. avalanche</a><a href="#extra">Find extra money</a><a href="#faq">FAQ</a><a href="calculate-your-payment.html">Multi-debt planner</a></div>
 </div></header>
 
 <section id="calculator"><div class="wrap">
@@ -199,7 +200,7 @@ nav ul a.active{color:var(--accent)}
     <div class="stat"><small>Paying the monthly payment</small><b id="m1">–</b><small id="i1"></small></div>
     <div class="stat"><small>Paying a little extra</small><b id="m2" style="color:#22c55e">–</b><small id="i2"></small></div>
    </div>
-   <div class="card" style="margin-top:12px"><h3 id="save" style="font-size:1.2rem">–</h3><p class="note" style="margin:6px 0 0">Estimates only. Assumes a fixed rate, no new charges and interest compounded monthly.</p></div>
+   <div class="card" style="margin-top:12px"><h3 id="save" style="font-size:1.2rem">–</h3><p class="note" style="margin:6px 0 0">Estimates only. Assumes a fixed rate, no new charges and interest compounded monthly. Need the payment to clear a debt by a deadline, or a plan for several debts? Try the <a href="calculate-your-payment.html">payment calculator and debt payoff planner</a>.</p></div>
   </div>
  </div>
 </div></section>
@@ -273,7 +274,7 @@ nav ul a.active{color:var(--accent)}
 
 <footer><div class="wrap">
  <div><strong style="color:var(--text)">Daniel Motter</strong><br>"Let no debt remain outstanding, except the continuing debt to love one another." Romans 13:8</div>
- <div class="links"><a href="index.html">Home</a><a href="about.html">About</a><a href="channel.html">Channel</a></div>
+ <div class="links"><a href="index.html">Home</a><a href="about.html">About</a><a href="channel.html">Channel</a><a href="calculate-your-payment.html">Calculate Your Payment</a></div>
  <div style="grid-column:1/-1;font-size:.8rem">© <span id="yr"></span> Daniel Motter. Not financial advice; just my story.</div>
 </div></footer>
 <script>document.getElementById('yr').textContent=new Date().getFullYear();</script>
