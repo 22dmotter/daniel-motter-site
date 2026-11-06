@@ -199,6 +199,25 @@ summary{cursor:pointer;font-family:"Space Grotesk";font-weight:700;font-size:1.1
 @media(min-width:760px) and (max-width:1000px){nav ul{gap:16px}nav ul a{font-size:.85rem}}
 nav ul a:focus-visible,nav .btn:focus-visible{outline:2px solid #ff7a59;outline-offset:2px}
 .wrap>*,.stats>*,.out>*,.calc>*,.cards>*,.row2>*{min-width:0}h1,h2,h3,.stat b{overflow-wrap:break-word}</style>
+<style>/* narrow-screen fixes */
+.sr{margin:-1px;border:0;padding:0;clip-path:inset(50%)}
+.tscroll{position:relative}
+fieldset{min-width:0;min-inline-size:0}
+.radio{align-items:flex-start}.radio input{flex:none;margin-top:3px}
+.debts .cl{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;margin:-1px}
+@media(max-width:559px){
+ .debts,.debts tbody,.debts tr,.debts td{display:block;width:100%}
+ .debts thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);margin:-1px}
+ .debts tr{border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:12px;margin-bottom:12px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}
+ .debts td{padding:0;min-width:0}
+ .debts td:first-child{grid-column:1/-1}
+ .debts td:last-child{grid-column:1/-1;text-align:right}
+ .debts .cl{position:static;width:auto;height:auto;overflow:visible;clip:auto;clip-path:none;white-space:normal;margin:0 0 4px;display:block;font-size:.8rem;color:var(--muted)}
+ .debts input,.debts .d-name{min-width:0}
+ .tscroll[aria-label="Your debts"]{overflow:visible}
+}
+@media(max-width:759px){nav{position:static}}
+</style>
 </head>
 <body>
 
@@ -380,14 +399,17 @@ nav ul a:focus-visible,nav .btn:focus-visible{outline:2px solid #ff7a59;outline-
  /* ---- Tool 2 ---- */
  var rows=$('rows'),uid=0,MAXR=20;
  var EX=[['Example: Medical bill',1200,0,50],['Example: Credit card',3200,24.99,95],['Example: Car loan',11500,7.5,280],['Example: Student loan',18000,5.5,190]];
- function field(type,attrs,label){var i=document.createElement('input');i.type=type;for(var k in attrs)i.setAttribute(k,attrs[k]);i.setAttribute('aria-label',label);i.addEventListener('input',runD);return i;}
+ function field(type,attrs,label){var i=document.createElement('input');i.type=type;for(var k in attrs)i.setAttribute(k,attrs[k]);i.dataset.label=label;i.addEventListener('input',runD);return i;}
  function addRow(d){if(rows.children.length>=MAXR)return;uid++;var tr=document.createElement('tr');d=d||['','','',''];
   var n='Debt '+(rows.children.length+1);
   var cells=[field('text',{maxlength:'40',placeholder:'e.g. Visa card',class:'d-name'},n+' name'),
    field('number',{inputmode:'decimal',min:'0',max:'10000000',step:'0.01',placeholder:'0.00',class:'d-bal'},n+' balance in dollars'),
    field('number',{inputmode:'decimal',min:'0',max:'100',step:'0.01',placeholder:'0',class:'d-apr'},n+' APR percent'),
    field('number',{inputmode:'decimal',min:'0',max:'1000000',step:'0.01',placeholder:'0.00',class:'d-min'},n+' monthly minimum in dollars')];
-  cells.forEach(function(c,i){c.value=d[i];var td=document.createElement('td');td.appendChild(c);tr.appendChild(td)});
+  var H=['Debt name','Balance ($)','APR (%)','Monthly minimum ($)'];
+  cells.forEach(function(c,i){c.value=d[i];c.id='d'+uid+'-'+i;var td=document.createElement('td');
+   var l=document.createElement('label');l.htmlFor=c.id;l.className='cl';var sr=document.createElement('span');sr.className='sr';sr.textContent=n+' ';l.appendChild(sr);l.appendChild(document.createTextNode(H[i]));
+   td.appendChild(l);td.appendChild(c);tr.appendChild(td)});
   var rm=document.createElement('button');rm.type='button';rm.className='rm';rm.textContent='×';rm.setAttribute('aria-label','Remove '+n);
   rm.addEventListener('click',function(){if(rows.children.length>1){tr.remove();runD();$('add').focus();}});
   var td=document.createElement('td');td.appendChild(rm);tr.appendChild(td);rows.appendChild(tr);
