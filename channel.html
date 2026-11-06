@@ -149,7 +149,11 @@ blockquote{border-left:2px solid;border-image:linear-gradient(#ff3b3b,#ff7a59) 1
 nav ul a.active{color:var(--accent)}
 @media(min-width:760px){.cards{grid-template-columns:repeat(3,1fr)}.cards.two{grid-template-columns:1fr 1fr}}
 </style>
-<style>@media(min-width:760px) and (max-width:1000px){nav ul{gap:16px}nav ul a{font-size:.85rem}}</style>
+<style>/* responsive nav: links wrap onto a second row on small screens */
+@media(max-width:759px){nav .wrap{flex-wrap:wrap;height:auto;min-height:60px;padding-top:10px;padding-bottom:10px;row-gap:8px}nav ul{display:flex;flex-wrap:wrap;order:3;width:100%;gap:6px 16px}nav ul a{font-size:.9rem;display:inline-block;padding:4px 0}}
+@media(min-width:760px) and (max-width:1000px){nav ul{gap:16px}nav ul a{font-size:.85rem}}
+nav ul a:focus-visible,nav .btn:focus-visible{outline:2px solid #ff7a59;outline-offset:2px}
+.wrap>*,.stats>*,.out>*,.calc>*,.cards>*,.row2>*{min-width:0}h1,h2,h3,.stat b{overflow-wrap:break-word}</style>
 </head>
 <body>
 

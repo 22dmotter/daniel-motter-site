@@ -167,7 +167,7 @@ nav ul a.active{color:var(--accent)}
 <style>
 .row2{display:grid;gap:16px}
 @media(min-width:560px){.row2{grid-template-columns:1fr 1fr}}
-select,.debts input{width:100%;padding:13px 14px;border-radius:12px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);color:var(--text);font:inherit;font-size:1rem}
+select,.debts input,#d-extra{box-sizing:border-box;max-width:100%;width:100%;padding:13px 14px;border-radius:12px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);color:var(--text);font:inherit;font-size:1rem}
 select option{background:#13161b}
 .debts input{padding:10px 12px;min-width:110px}
 .debts .d-name{min-width:170px}
@@ -189,9 +189,16 @@ fieldset{border:0}legend{font-size:.85rem;color:var(--muted);margin-bottom:6px}
 .radio input{accent-color:#ff3b3b;width:18px;height:18px}
 summary{cursor:pointer;font-family:"Space Grotesk";font-weight:700;font-size:1.1rem}
 .card h3{margin-bottom:12px}
+.tscroll{max-width:100%}
+#planner .card,#payment .card{min-width:0}
+@media(max-width:559px){#d-out .stats{grid-template-columns:1fr}.out{grid-template-columns:1fr}.out .stat[style]{grid-column:auto!important}.debts input{min-width:96px}.debts .d-name{min-width:140px}.toc a{white-space:normal}}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 </style>
-<style>@media(min-width:760px) and (max-width:1000px){nav ul{gap:16px}nav ul a{font-size:.85rem}}</style>
+<style>/* responsive nav: links wrap onto a second row on small screens */
+@media(max-width:759px){nav .wrap{flex-wrap:wrap;height:auto;min-height:60px;padding-top:10px;padding-bottom:10px;row-gap:8px}nav ul{display:flex;flex-wrap:wrap;order:3;width:100%;gap:6px 16px}nav ul a{font-size:.9rem;display:inline-block;padding:4px 0}}
+@media(min-width:760px) and (max-width:1000px){nav ul{gap:16px}nav ul a{font-size:.85rem}}
+nav ul a:focus-visible,nav .btn:focus-visible{outline:2px solid #ff7a59;outline-offset:2px}
+.wrap>*,.stats>*,.out>*,.calc>*,.cards>*,.row2>*{min-width:0}h1,h2,h3,.stat b{overflow-wrap:break-word}</style>
 </head>
 <body>
 
