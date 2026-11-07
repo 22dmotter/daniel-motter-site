@@ -15,7 +15,7 @@ A single self-contained `index.html` (embedded CSS, only Google Fonts loaded ext
 - **Colors/fonts**: edit the CSS variables in `:root` (`--accent` is the red highlight).
 
 ## Deploy (free)
-Drag the folder onto Netlify Drop, or push to GitHub Pages / Cloudflare Pages.
+Published with GitHub Pages from the `main` branch root of the public repo: push to `main` and the site at https://22dmotter.github.io/daniel-motter-site/ updates within a few minutes. `.nojekyll` makes Pages serve the files as-is.
 
 ## New pages
 - **about.html**: who Daniel is, placeholder payoff stats, faith section (Romans 13:8), what he offers (channel, upcoming PDF guide, coaching, affiliate tools like Dollarwise), and a call-to-action to the Channel page.
@@ -30,10 +30,10 @@ The channel URL is `https://www.youtube.com/@danielmotter62`. To swap in the rea
 At the bottom of `index.html` and `about.html`, edit `DEBT_START` and `PAID` to update the totals; the progress bar and "left to go" calculate automatically. The day counter goes up by one every day, starting at 1 on Nov 3, 2026.
 
 ## SEO
-Each page has a keyword-focused title and description, a canonical URL, Open Graph/Twitter tags for link previews, and schema.org structured data. `robots.txt` and `sitemap.xml` are included. All URLs use `https://danielmottersite.netlify.app`; if you add a custom domain, find-and-replace that address across the HTML, `robots.txt`, and `sitemap.xml`.
+Each page has a keyword-focused title and description, a canonical URL, Open Graph/Twitter tags for link previews, and schema.org structured data. `robots.txt` and `sitemap.xml` are included. All URLs use `https://22dmotter.github.io/daniel-motter-site`; if you add a custom domain, find-and-replace that address across the HTML, `robots.txt`, and `sitemap.xml`.
 
 ## Get Out of Debt guide
-`get-out-of-debt.html`: a practical SEO guide with a working payoff calculator, why debt hurts, a 7-step plan, snowball vs. avalanche comparison, ways to find extra money, Romans 13:8, and an FAQ (Article, HowTo, FAQ, and breadcrumb structured data). The old `why-debt-is-bad.html` address redirects here via `_redirects` (Netlify).
+`get-out-of-debt.html`: a practical SEO guide with a working payoff calculator, why debt hurts, a 7-step plan, snowball vs. avalanche comparison, ways to find extra money, Romans 13:8, and an FAQ (Article, HowTo, FAQ, and breadcrumb structured data). The old `why-debt-is-bad.html` address redirects here via a small `why-debt-is-bad.html` redirect page (GitHub Pages) and `_redirects` (Netlify only).
 
 ## Calculate Your Payment
 `calculate-your-payment.html`: a monthly payment calculator (payment needed to pay off one debt by a deadline) and an in-depth multi-debt payoff planner (snowball or avalanche, rolled-over payments, per-debt payoff order and month-by-month schedule). The math lives in `payment-calculator.js` and runs in the visitor's browser only. Run `node tests/payment-calculator.test.js` to check it.

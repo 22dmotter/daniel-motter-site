@@ -1,3 +1,3 @@
 User-agent: *
 Allow: /
-Sitemap: https://danielmottersite.netlify.app/sitemap.xml
+Sitemap: https://22dmotter.github.io/daniel-motter-site/sitemap.xml
