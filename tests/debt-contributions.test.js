@@ -92,8 +92,8 @@ test('all static history records match sorted grouped ledger, including dollar s
 test('fallback sync is deterministic, idempotent, and matches current release files',()=>{
  const dir=fs.mkdtempSync(path.join(os.tmpdir(),'dm-public-debt-'));
  try {
-  fs.mkdirSync(path.join(dir,'scripts'));fs.copyFileSync(path.join(root,'debt-contributions.js'),path.join(dir,'debt-contributions.js'));fs.copyFileSync(path.join(root,'scripts/sync-public-debt.js'),path.join(dir,'scripts/sync-public-debt.js'));
-  const files=['index.html','about.html','daily-contributions.html'];
+  fs.mkdirSync(path.join(dir,'scripts'));fs.copyFileSync(path.join(root,'debt-contributions.js'),path.join(dir,'debt-contributions.js'));fs.copyFileSync(path.join(root,'debt-breakdown.js'),path.join(dir,'debt-breakdown.js'));fs.copyFileSync(path.join(root,'scripts/sync-public-debt.js'),path.join(dir,'scripts/sync-public-debt.js'));
+  const files=['index.html','about.html','daily-contributions.html','debt-breakdown.html'];
   for(const f of files)fs.copyFileSync(path.join(root,f),path.join(dir,f));
   cp.execFileSync(process.execPath,[path.join(dir,'scripts/sync-public-debt.js')]);
   for(const f of files)assert.equal(fs.readFileSync(path.join(dir,f),'utf8'),fs.readFileSync(path.join(root,f),'utf8'),f+' fallbacks need syncing');

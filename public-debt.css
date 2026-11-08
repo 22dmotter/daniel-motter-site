@@ -1,7 +1,7 @@
 /* Native linked stat cards stay visually consistent and keyboard accessible. */
-a.paid-stat-link{display:block;text-decoration:none;color:inherit;min-width:0}
-.paid-stat-link .contribution-hint{display:block;font-size:.75rem;margin-top:8px;color:#b8c1cc;text-decoration:underline;text-underline-offset:3px}
-a.paid-stat-link:focus-visible{outline:3px solid #ff7a59;outline-offset:4px}
+a.paid-stat-link,a.remaining-stat-link{display:block;text-decoration:none;color:inherit;min-width:0}
+.paid-stat-link .contribution-hint,.remaining-stat-link .breakdown-hint{display:block;font-size:.75rem;margin-top:8px;color:#b8c1cc;text-decoration:underline;text-underline-offset:3px}
+a.paid-stat-link:focus-visible,a.remaining-stat-link:focus-visible{outline:3px solid #ff7a59;outline-offset:4px}
 .contribution-list{list-style:none;display:grid;gap:16px}
 .contribution-record{min-width:0}.contribution-record h3{margin:8px 0 18px;font-size:1.4rem}
 .contribution-amounts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
@@ -13,3 +13,14 @@ a.paid-stat-link:focus-visible{outline:3px solid #ff7a59;outline-offset:4px}
 .history-note{color:var(--muted);font-size:.9rem;margin-top:18px;max-width:760px}
 .history-progress{margin-top:16px}
 @media(max-width:599px){.contribution-amounts,.history-summary{grid-template-columns:minmax(0,1fr)}.contribution-record{padding:20px}}
+
+.breakdown-grid{list-style:none;display:grid;align-items:start;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.balance-card{min-width:0}.balance-card h3{line-height:1.25;font-size:1.25rem;margin:0 0 16px;overflow-wrap:anywhere}
+.balance-value{display:block;font-family:"Space Grotesk",Inter,sans-serif;font-size:1.8rem;overflow-wrap:anywhere}
+.unitemized{border-style:dashed}.breakdown-warning{padding:18px;border:1px solid #ff7a59;border-radius:14px;color:#ffbcaa;margin:18px 0}
+.breakdown-warning[hidden]{display:none}
+@media(max-width:759px){.breakdown-grid{grid-template-columns:minmax(0,1fr)}}
+
+.student-loans{margin-top:18px;border-top:1px solid var(--line);padding-top:14px}.student-loans summary{cursor:pointer;font-weight:600;overflow-wrap:anywhere}
+.student-loans summary:focus-visible{outline:3px solid #ff7a59;outline-offset:4px}
+.included-loans{list-style:none;display:grid;gap:12px;margin-top:14px}.included-loans li{padding:12px;border:1px solid var(--line);border-radius:10px;min-width:0}.included-loans p{font-size:.85rem;color:var(--muted);overflow-wrap:anywhere}.included-balance{display:block;margin-top:4px;font-size:1.1rem;overflow-wrap:anywhere}
