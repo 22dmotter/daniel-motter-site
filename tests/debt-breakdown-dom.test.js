@@ -21,4 +21,17 @@ test('included loan labels and descriptions are literal safe text',()=>{
  const label='<img src=x onerror=alert(1)>',x=setup('debt-breakdown.html',100,[{label:'Student loans',balanceCents:29,reportedDate:'2026-11-08',included:[{label,description:'<script>alert(1)</script>',balanceCents:29}]}]);
  assert.equal(x.d.querySelector('.included-loans strong').textContent,label);assert.equal(x.d.querySelectorAll('.included-loans img,.included-loans script').length,0);x.dom.window.close();
 });
+function colors(x){const style=x.d.createElement('style');style.textContent=fs.readFileSync(path.join(root,'public-debt.css'),'utf8');x.d.head.appendChild(style);}
+test('every current breakdown debt amount, including subtotal, is red; paid stays green',()=>{
+ const x=setup();colors(x);const nodes=x.d.querySelectorAll('.debt-start,.debt-left,.balance-value,.included-balance,.debt-amount');assert.equal(nodes.length,13);nodes.forEach(n=>assert.equal(x.w.getComputedStyle(n).color,'rgb(255, 59, 59)',n.textContent));assert.equal(x.w.getComputedStyle(x.d.querySelector('.debt-paid')).color,'rgb(34, 197, 94)');assert.notEqual(x.w.getComputedStyle(x.d.querySelector('.student-loans .history-note')).color,'rgb(255, 59, 59)');x.dom.window.close();
+});
+test('future reconciliation monetary figures are red without coloring whole warning red',()=>{
+ const x=setup('debt-breakdown.html',1000000);colors(x);const warning=x.d.getElementById('breakdown-warning');assert.equal(warning.querySelectorAll('.debt-amount').length,2);warning.querySelectorAll('.debt-amount').forEach(n=>assert.equal(x.w.getComputedStyle(n).color,'rgb(255, 59, 59)'));assert.notEqual(x.w.getComputedStyle(warning).color,'rgb(255, 59, 59)');x.dom.window.close();
+});
+test('breakdown red selectors do not change Home remaining or paid colors',()=>{
+ const x=setup('index.html');colors(x);assert.notEqual(x.w.getComputedStyle(x.d.querySelector('.debt-left')).color,'rgb(255, 59, 59)');assert.equal(x.w.getComputedStyle(x.d.querySelector('.debt-paid')).color,'rgb(34, 197, 94)');x.dom.window.close();
+});
+test('no-JavaScript fallback has the same red debt amounts and green paid value',()=>{
+ const dom=new JSDOM(fs.readFileSync(path.join(root,'debt-breakdown.html'),'utf8'),{runScripts:'outside-only'}),x={dom,w:dom.window,d:dom.window.document};colors(x);const nodes=x.d.querySelectorAll('.debt-start,.debt-left,.balance-value,.included-balance,.debt-amount');assert.equal(nodes.length,13);nodes.forEach(n=>assert.equal(x.w.getComputedStyle(n).color,'rgb(255, 59, 59)'));assert.equal(x.w.getComputedStyle(x.d.querySelector('.debt-paid')).color,'rgb(34, 197, 94)');x.dom.window.close();
+});
 console.log(count+' public breakdown DOM tests passed');

@@ -24,3 +24,10 @@ a.paid-stat-link:focus-visible,a.remaining-stat-link:focus-visible{outline:3px s
 .student-loans{margin-top:18px;border-top:1px solid var(--line);padding-top:14px}.student-loans summary{cursor:pointer;font-weight:600;overflow-wrap:anywhere}
 .student-loans summary:focus-visible{outline:3px solid #ff7a59;outline-offset:4px}
 .included-loans{list-style:none;display:grid;gap:12px;margin-top:14px}.included-loans li{padding:12px;border:1px solid var(--line);border-radius:10px;min-width:0}.included-loans p{font-size:.85rem;color:var(--muted);overflow-wrap:anywhere}.included-balance{display:block;margin-top:4px;font-size:1.1rem;overflow-wrap:anywhere}
+
+/* Debt figures only on the breakdown page; paid totals keep their green styling. */
+#debt-breakdown-page .debt-start,
+#debt-breakdown-page .debt-left,
+#debt-breakdown-page .balance-value,
+#debt-breakdown-page .included-balance,
+#debt-breakdown-page .debt-amount{color:#ff3b3b}

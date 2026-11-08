@@ -8,14 +8,14 @@ function escape(s) { return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<'
 function balanceRecords() {
   const rows = breakdown.named.map(d => {
     let detail = '';
-    if (d.included) detail = '<details class="student-loans"><summary>View '+d.included.length+' student loans</summary><p class="history-note">Included in the '+C.money(d.balanceCents)+' above—not additional debt.</p><ol class="included-loans">'+d.included.map(child => '<li><strong>'+escape(child.label)+'</strong><p>'+escape(child.description)+'</p><span class="included-balance">'+C.money(child.balanceCents)+'</span></li>').join('')+'</ol></details>';
+    if (d.included) detail = '<details class="student-loans"><summary>View '+d.included.length+' student loans</summary><p class="history-note">Included in the <span class="debt-amount">'+C.money(d.balanceCents)+'</span> above—not additional debt.</p><ol class="included-loans">'+d.included.map(child => '<li><strong>'+escape(child.label)+'</strong><p>'+escape(child.description)+'</p><span class="included-balance">'+C.money(child.balanceCents)+'</span></li>').join('')+'</ol></details>';
     return '<li class="card balance-card"><h3>'+escape(d.label)+'</h3><b class="balance-value">'+C.money(d.balanceCents)+'</b><p class="history-note">Reported <time datetime="'+d.reportedDate+'">'+C.formatDate(d.reportedDate)+'</time></p>'+detail+'</li>';
   });
   if (!breakdown.mismatch && breakdown.unitemizedCents > 0) rows.push('<li class="card balance-card unitemized"><h3>Other debt—not yet itemized</h3><b class="balance-value">'+C.money(breakdown.unitemizedCents)+'</b><p class="history-note">Calculated remainder, not a separate reported account. More individual balances can be added as I report them.</p></li>');
   return rows.join('\n  ');
 }
 function balanceWarning() {
-  return '<p id="breakdown-warning" class="breakdown-warning" role="alert"'+(breakdown.mismatch ? '' : ' hidden')+'>'+(breakdown.mismatch ? 'Update needed: the individual balance snapshots total '+C.money(breakdown.namedCents)+', which is '+C.money(breakdown.discrepancyCents)+' above the current remaining total. The individual balances need updating. No unitemized amount is shown until the figures reconcile.' : '')+'</p>';
+  return '<p id="breakdown-warning" class="breakdown-warning" role="alert"'+(breakdown.mismatch ? '' : ' hidden')+'>'+(breakdown.mismatch ? 'Update needed: the individual balance snapshots total <span class="debt-amount">'+C.money(breakdown.namedCents)+'</span>, which is <span class="debt-amount">'+C.money(breakdown.discrepancyCents)+'</span> above the current remaining total. The individual balances need updating. No unitemized amount is shown until the figures reconcile.' : '')+'</p>';
 }
 function balanceStatus() {
   return '<p id="breakdown-status" class="history-note">'+(breakdown.mismatch ? 'Individual snapshots do not currently reconcile with the overall total.' : breakdown.unitemizedCents === 0 ? 'The current remaining total is fully itemized by these reported snapshots.' : 'This is a partial breakdown. The calculated remainder fills the gap to the current remaining total.')+'</p>';
