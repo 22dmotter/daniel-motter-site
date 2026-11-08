@@ -1,0 +1,15 @@
+/* Native linked stat cards stay visually consistent and keyboard accessible. */
+a.paid-stat-link{display:block;text-decoration:none;color:inherit;min-width:0}
+.paid-stat-link .contribution-hint{display:block;font-size:.75rem;margin-top:8px;color:#b8c1cc;text-decoration:underline;text-underline-offset:3px}
+a.paid-stat-link:focus-visible{outline:3px solid #ff7a59;outline-offset:4px}
+.contribution-list{list-style:none;display:grid;gap:16px}
+.contribution-record{min-width:0}.contribution-record h3{margin:8px 0 18px;font-size:1.4rem}
+.contribution-amounts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.contribution-amounts>*{min-width:0}.contribution-amounts dt{color:var(--muted);font-size:.85rem}
+.contribution-amounts dd{font-family:"Space Grotesk",Inter,sans-serif;font-size:1.5rem;overflow-wrap:anywhere}
+.contribution-amount{color:#22c55e}
+.history-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:28px}
+.history-summary>*{min-width:0}.history-summary .stat b{font-size:clamp(1.5rem,3vw,2rem);overflow-wrap:anywhere}
+.history-note{color:var(--muted);font-size:.9rem;margin-top:18px;max-width:760px}
+.history-progress{margin-top:16px}
+@media(max-width:599px){.contribution-amounts,.history-summary{grid-template-columns:minmax(0,1fr)}.contribution-record{padding:20px}}

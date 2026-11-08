@@ -27,7 +27,7 @@ The channel URL is `https://www.youtube.com/@DanielEMotter`. To swap in the real
 `sed -i 's#https://www.youtube.com/@DanielEMotter#https://youtube.com/@YOURHANDLE#g' *.html`
 
 ## Debt numbers and month counter
-At the bottom of `index.html` and `about.html`, edit `DEBT_START` and `PAID` to update the totals; the progress bar and "left to go" calculate automatically. The day counter goes up by one every day, starting at 1 on Nov 3, 2026.
+Add each recorded contribution to `debt-contributions.js`, then run `node scripts/sync-public-debt.js` and the history tests (see below). Public totals and progress derive from that one ledger. The day counter goes up by one every day, starting at 1 on Nov 3, 2026.
 
 ## SEO
 Each page has a keyword-focused title and description, a canonical URL, Open Graph/Twitter tags for link previews, and schema.org structured data. `robots.txt` and `sitemap.xml` are included. All URLs use `https://22dmotter.github.io/daniel-motter-site`; if you add a custom domain, find-and-replace that address across the HTML, `robots.txt`, and `sitemap.xml`.
@@ -51,3 +51,11 @@ Tests: `node tests/debt-tracker.test.js` and `node tests/payment-calculator.test
 
 ## Coming Soon
 `coming-soon.html` is an informational page about a planned subscription-based personal finance application. It does not implement an app, accounts, signup, billing or backend storage, and announces no prices or launch date. The existing browser-only Debt Tracker remains a separate tool available without a subscription. Future application implementation/hosting is outside this static site's scope.
+
+
+## Daniel's public daily contributions
+`daily-contributions.html` is Daniel's self-reported payoff history, linked from the full green paid stat card on Home and About. These are recorded contribution dates, not verified bank settlement dates, and missing dates are not zero-payment entries. The initial $2.68 is confirmed for Nov 3, 2026 (Day 1); the five dated updates total $898.88. This public ledger is entirely separate from visitors' private local Debt Trackers.
+
+For a new payment update, add a dated positive whole-cent contribution to **`debt-contributions.js`**, the one authoritative source for Daniel's starting amount, journey start and contributions. Multiple entries on the same date are grouped and chronological totals are derived automatically. Never add guessed dates or zero-value days. Run **`node scripts/sync-public-debt.js`** to refresh the Home/About/history HTML fallbacks, then **`node tests/debt-contributions.test.js`** and the existing regression tests before committing. The history test rejects stale fallbacks, so a ledger update cannot silently publish mismatched public totals. `public-debt-ui.js` derives all three live summaries from this same source without fetching an API or touching visitor storage. `public-debt.css` provides the linked-card focus styles and responsive history cards.
+
+History checks: `node tests/debt-contributions.test.js`; optional simulated DOM checks using the same temporary jsdom installation: `NODE_PATH=/tmp/dm-tracker-test/node_modules node tests/debt-contributions-dom.test.js`.

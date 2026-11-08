@@ -151,6 +151,7 @@ nav ul a:focus-visible,nav .btn:focus-visible{outline:2px solid #ff7a59;outline-
 .wrap>*,.stats>*,.out>*,.calc>*,.cards>*,.row2>*{min-width:0}h1,h2,h3,.stat b{overflow-wrap:break-word}</style>
 <style>@media(max-width:759px){nav{position:static}}</style>
 <link rel="stylesheet" href="site-nav.css">
+<link rel="stylesheet" href="public-debt.css">
 </head>
 <body>
 
@@ -171,10 +172,10 @@ nav ul a:focus-visible,nav .btn:focus-visible{outline:2px solid #ff7a59;outline-
  </div>
  <div class="stats four">
   <div class="stat"><b class="debt-start">$49,113.44</b><small>Starting debt</small></div>
-  <div class="stat"><b class="debt-paid">$898.88</b><small>Paid off so far</small></div>
+  <a class="stat paid-stat-link" href="daily-contributions.html"><b class="debt-paid">$898.88</b><small>Paid off so far</small><small class="contribution-hint">View daily contributions →</small></a>
   <div class="stat"><b class="debt-left">$48,214.56</b><small>Left to go</small></div>
   <div class="stat"><b class="days-in">1</b><small>Days in (started Nov 3, 2026)</small></div>
-  <div class="stat progress"><small>Progress to debt-free: <strong class="pct" style="color:var(--accent)">0.0%</strong></small><div class="bar"><i></i></div></div>
+  <div class="stat progress"><small>Progress to debt-free: <strong class="pct" style="color:var(--accent)">1.8%</strong></small><div class="bar"><i style="width:1.830212%"></i></div></div>
  </div>
 </div></header>
 
@@ -234,23 +235,8 @@ nav ul a:focus-visible,nav .btn:focus-visible{outline:2px solid #ff7a59;outline-
 <script>
 document.getElementById('yr').textContent=new Date().getFullYear();
 </script>
-<script>
-/* Debt numbers: edit these two values to update the site */
-var DEBT_START=49113.44, PAID=898.88;
-(function(){
- var s=new Date(2026,10,3),n=new Date(),t=new Date(n.getFullYear(),n.getMonth(),n.getDate());
- var d=Math.round((t-s)/864e5)+1;
- if(d<1)d=1; /* journey starts Nov 3, 2026 = day 1 */
- document.querySelectorAll('.days-in').forEach(function(e){e.textContent=d.toLocaleString('en-US')});
- var f=function(x){return '$'+x.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})};
- document.querySelectorAll('.debt-start').forEach(function(e){e.textContent=f(DEBT_START)});
- document.querySelectorAll('.debt-paid').forEach(function(e){e.textContent=f(PAID)});
- document.querySelectorAll('.debt-left').forEach(function(e){e.textContent=f(DEBT_START-PAID)});
- var p=Math.min(100,PAID/DEBT_START*100);
- document.querySelectorAll('.pct').forEach(function(e){e.textContent=p.toFixed(1)+'%'});
- document.querySelectorAll('.bar i').forEach(function(e){e.style.width=p+'%'});
-})();
-</script>
+<script src="debt-contributions.js"></script>
+<script src="public-debt-ui.js"></script>
 <canvas id="particles" aria-hidden="true"></canvas>
 <script>
 (function(){
