@@ -37,3 +37,13 @@ Each page has a keyword-focused title and description, a canonical URL, Open Gra
 
 ## Calculate Your Payment
 `calculate-your-payment.html`: a monthly payment calculator (payment needed to pay off one debt by a deadline) and an in-depth multi-debt payoff planner (snowball or avalanche, rolled-over payments, per-debt payoff order and month-by-month schedule). The math lives in `payment-calculator.js` and runs in the visitor's browser only. Run `node tests/payment-calculator.test.js` to check it.
+
+
+## Personal debt tracker
+`debt-tracker.html` records each visitor's balances and actual payments locally, without a backend or account. `debt-tracker-core.js` contains integer-cent math, validation, milestones and persistence; `debt-tracker-ui.js` renders all user text with textContent. `debt-tracker.css` and the shared `site-nav.css` handle mobile layouts.
+
+Storage key: `daniel-motter-debt-tracker-v1`. Version 1 JSON backups are strictly validated; unsupported versions or corrupt saved data are never silently reset. Limits: 50 debts, 5,000 combined history entries, $10m per amount, 2 MB backup. Opening balance snapshots are not fabricated payment events. Payment totals are separate from net balance reduction. Milestones are current, reversible statuses derived from tracked balances/history, not permanent awards or guessed dates. Deleting debts changes the baseline; undoing the latest entry restores the prior balance.
+
+Local browser storage is neither encrypted nor cross-device sync. Shared profiles can see data; storage clearing, private browsing or storage failure may lose it. Download unencrypted JSON backups and keep them safe. Import replacement, debt deletion, undo and clearing require visitor confirmation. No bank credentials or contact details are requested, and there is no tracker data upload, analytics or network API. Do not add user backup files to this repository.
+
+Tests: `node tests/debt-tracker.test.js` and `node tests/payment-calculator.test.js`. Simulated DOM interaction tests: install `jsdom@26` into a temporary directory (`npm install --prefix /tmp/dm-tracker-test jsdom@26 --no-audit --no-fund`), then run `NODE_PATH=/tmp/dm-tracker-test/node_modules node tests/debt-tracker-dom.test.js`. This is a test-only dependency, not shipped to visitors. Browser QA should cover empty/add/log/undo/delete/reload/export/import, invalid import, storage warnings, keyboard navigation and the six-link nav at desktop/tablet/320 CSS pixels.

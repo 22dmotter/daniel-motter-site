@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Personal Debt Tracker: Payments, Progress & Milestones | Daniel Motter</title>
+<meta name="description" content="Track your own debt balances, payment history, and progress milestones in your browser. No account needed. Export and restore a backup of your journey.">
+<meta name="keywords" content="personal debt tracker, debt payoff progress, payment history, debt milestones, local debt tracker">
+<meta name="author" content="Daniel Motter">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#0b0d10">
+<link rel="canonical" href="https://22dmotter.github.io/daniel-motter-site/debt-tracker.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Daniel Motter">
+<meta property="og:title" content="Personal Debt Tracker: Payments, Progress & Milestones | Daniel Motter">
+<meta property="og:description" content="Track your own debt balances, payment history, and progress milestones in your browser. No account needed. Export and restore a backup of your journey.">
+<meta property="og:url" content="https://22dmotter.github.io/daniel-motter-site/debt-tracker.html">
+<meta property="og:image" content="https://22dmotter.github.io/daniel-motter-site/daniel-motter.jpg">
+<meta name="twitter:image" content="https://22dmotter.github.io/daniel-motter-site/daniel-motter.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Personal Debt Tracker: Payments, Progress & Milestones | Daniel Motter">
+<meta name="twitter:description" content="Track your own debt balances, payment history, and progress milestones in your browser. No account needed. Export and restore a backup of your journey.">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "WebPage", "name": "Personal Debt Tracker: Payments, Progress & Milestones | Daniel Motter", "description": "Track your own debt balances, payment history, and progress milestones in your browser. No account needed. Export and restore a backup of your journey.", "url": "https://22dmotter.github.io/daniel-motter-site/debt-tracker.html"}, {"@type": "WebApplication", "name": "Personal Debt Journey Tracker", "url": "https://22dmotter.github.io/daniel-motter-site/debt-tracker.html", "applicationCategory": "FinanceApplication", "operatingSystem": "Any (runs in your web browser)", "browserRequirements": "Requires JavaScript; browser storage for saving locally", "isAccessibleForFree": true, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "author": {"@type": "Person", "name": "Daniel Motter"}}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://22dmotter.github.io/daniel-motter-site/"}, {"@type": "ListItem", "position": 2, "name": "Debt Tracker", "item": "https://22dmotter.github.io/daniel-motter-site/debt-tracker.html"}]}]}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0b0d10;--bg2:#13161b;--line:#232830;--text:#f4f5f7;--muted:#9aa3ae;--accent:#ff3b3b;--accent-ink:#ffffff;--radius:14px;--max:1080px}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:Inter,system-ui,sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:"Space Grotesk",Inter,sans-serif;line-height:1.05;letter-spacing:-.02em}
+a{color:inherit}
+.wrap{max-width:var(--max);margin:0 auto;padding:0 20px}
+.ph{background:rgba(255,59,59,.14);color:var(--accent);border:1px dashed var(--accent);border-radius:6px;padding:0 6px;font-size:.85em;white-space:nowrap}
+/* nav */
+nav{position:sticky;top:0;z-index:10;background:rgba(11,13,16,.85);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;align-items:center;justify-content:space-between;height:60px}
+.logo{font-family:"Space Grotesk";font-weight:700;font-size:1.15rem;text-decoration:none}
+.logo span{color:var(--accent)}
+nav ul{display:none;list-style:none;gap:28px}
+nav ul a{text-decoration:none;color:var(--muted);font-size:.95rem}
+nav ul a:hover{color:var(--text)}
+.btn{display:inline-block;background:var(--accent);color:var(--accent-ink);font-weight:600;text-decoration:none;padding:12px 20px;border-radius:999px;border:0;cursor:pointer;font-size:1rem;font-family:inherit;transition:transform .15s}
+.btn:hover{transform:translateY(-2px)}
+.btn.ghost{background:transparent;color:var(--text);border:1px solid var(--line)}
+.btn.sm{padding:8px 16px;font-size:.9rem}
+/* hero */
+.hero{padding:72px 0 56px}
+.eyebrow{display:inline-block;color:var(--accent);font-size:.8rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;margin-bottom:18px}
+.hero h1{font-size:clamp(2.6rem,9vw,5.4rem);margin-bottom:22px}
+.hero h1 em{font-style:normal;color:var(--accent)}
+.hero p.lead{font-size:1.15rem;color:var(--muted);max-width:560px;margin-bottom:30px}
+.cta-row{display:flex;flex-wrap:wrap;gap:12px}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:52px}
+.stat{background:var(--bg2);border:1px solid var(--line);border-radius:var(--radius);padding:20px}
+.stat b{display:block;font-family:"Space Grotesk";font-size:1.8rem}
+.stat small{color:var(--muted);font-size:.85rem}
+.progress{grid-column:1/-1}
+.bar{height:10px;background:var(--line);border-radius:999px;overflow:hidden;margin:12px 0 6px}
+.bar i{display:block;height:100%;width:35%;background:var(--accent);border-radius:999px}
+/* sections */
+section{padding:72px 0;border-top:1px solid var(--line)}
+.sec-head{margin-bottom:32px}
+.sec-head h2{font-size:clamp(2rem,6vw,3rem);margin-bottom:10px}
+.sec-head p{color:var(--muted);max-width:600px}
+.about{display:grid;gap:32px}
+.portrait{aspect-ratio:4/5;background:linear-gradient(135deg,#1a1f26,#0f1216);border:1px solid var(--line);border-radius:var(--radius);display:grid;place-items:center;color:var(--muted);font-size:.9rem;max-width:380px}
+.about p{margin-bottom:16px;color:#d3d7dd}
+blockquote{border-left:3px solid var(--accent);padding:6px 0 6px 18px;margin:24px 0;font-family:"Space Grotesk";font-size:1.25rem}
+blockquote cite{display:block;font-family:Inter;font-size:.85rem;color:var(--muted);font-style:normal;margin-top:6px}
+.videos{display:grid;gap:18px}
+.video{background:var(--bg2);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
+.embed{aspect-ratio:16/9;background:#000;display:grid;place-items:center;color:var(--muted);font-size:.9rem;text-align:center;padding:12px}
+.embed iframe{width:100%;height:100%;border:0}
+.video .meta{padding:16px 18px}
+.video .meta span{color:var(--accent);font-size:.75rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase}
+.video h3{font-size:1.15rem;margin-top:6px}
+.center{text-align:center;margin-top:32px}
+.story{background:var(--bg2);border:1px solid var(--line);border-radius:var(--radius);padding:28px}
+.story h3{font-size:1.6rem;margin-bottom:10px}
+.story p{color:var(--muted)}
+/* signup */
+.signup{background:var(--accent);color:var(--accent-ink);border-radius:22px;padding:40px 24px}
+.signup h2{font-size:clamp(2rem,6vw,3rem);margin-bottom:12px}
+.signup p{max-width:520px;margin-bottom:24px;opacity:.85}
+.signup form{display:grid;gap:10px;max-width:560px}
+.signup input{padding:14px 16px;border-radius:999px;border:2px solid var(--accent-ink);background:#fff;font-size:1rem;font-family:inherit}
+.signup .btn{background:var(--accent-ink);color:var(--accent)}
+.signup .fine{font-size:.8rem;margin:12px 0 0;opacity:.7}
+.thanks{display:none;font-weight:600;font-size:1.1rem}
+footer{border-top:1px solid var(--line);padding:40px 0;color:var(--muted);font-size:.9rem}
+footer .wrap{display:grid;gap:20px}
+footer .links{display:flex;flex-wrap:wrap;gap:20px}
+footer a{text-decoration:none}footer a:hover{color:var(--text)}
+@media(min-width:760px){
+ nav ul{display:flex}
+ .hero{padding:110px 0 80px}
+ .stats{grid-template-columns:repeat(3,1fr)}
+ .about{grid-template-columns:380px 1fr;align-items:center}
+ .videos{grid-template-columns:repeat(3,1fr)}
+ .signup{padding:64px}
+ .signup form{grid-template-columns:1fr 1fr auto}
+ footer .wrap{grid-template-columns:1fr auto;align-items:center}
+}
+
+#particles{position:fixed;inset:0;width:100%;height:100%;z-index:-1;pointer-events:none}
+html{background:#0b0d10}body{background:transparent}
+.debt-start{color:#ff3b3b}.debt-paid{color:#22c55e}
+
+/* ---- sleek refresh ---- */
+body{letter-spacing:-.005em}
+h1,h2,h3{letter-spacing:-.035em}
+.hero h1{font-weight:700;background:linear-gradient(180deg,#fff 30%,#b9bec7);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero h1 em,.page-hero h1 em{background:linear-gradient(90deg,#ff3b3b,#ff7a59);-webkit-background-clip:text;background-clip:text;color:transparent}
+.page-hero h1{background:linear-gradient(180deg,#fff 30%,#b9bec7);-webkit-background-clip:text;background-clip:text;color:transparent}
+nav{background:rgba(11,13,16,.55);backdrop-filter:blur(18px) saturate(160%);-webkit-backdrop-filter:blur(18px) saturate(160%);border-bottom:1px solid rgba(255,255,255,.06)}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;padding:5px 12px;border:1px solid rgba(255,59,59,.3);background:rgba(255,59,59,.08);border-radius:999px;font-size:.72rem}
+.stat,.card,.video,.story{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.015));border:1px solid rgba(255,255,255,.08);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-radius:18px;transition:transform .35s cubic-bezier(.2,.8,.2,1),border-color .35s,box-shadow .35s}
+.stat:hover,.card:hover,.video:hover{transform:translateY(-4px);border-color:rgba(255,59,59,.35);box-shadow:0 18px 40px -18px rgba(255,59,59,.35)}
+.stat b{font-size:2rem;letter-spacing:-.03em}
+.bar{height:8px;background:rgba(255,255,255,.07)}
+.bar i{background:linear-gradient(90deg,#ff3b3b,#ff7a59);box-shadow:0 0 16px rgba(255,59,59,.6);transition:width 1.2s cubic-bezier(.2,.8,.2,1)}
+.btn{transition:transform .25s cubic-bezier(.2,.8,.2,1),box-shadow .25s,background .25s;box-shadow:0 8px 24px -10px rgba(255,59,59,.7)}
+.btn:hover{transform:translateY(-2px);box-shadow:0 14px 30px -10px rgba(255,59,59,.8)}
+.btn.ghost{box-shadow:none;background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.12);backdrop-filter:blur(8px)}
+.btn.ghost:hover{border-color:rgba(255,255,255,.3);box-shadow:none}
+section{border-top:1px solid rgba(255,255,255,.05)}
+.signup{background:linear-gradient(135deg,#ff3b3b,#e0263f 60%,#b81d3a);box-shadow:0 30px 80px -30px rgba(255,59,59,.6);position:relative;overflow:hidden}
+.signup::after{content:"";position:absolute;inset:-40% -20% auto auto;width:60%;aspect-ratio:1;background:radial-gradient(circle,rgba(255,255,255,.18),transparent 60%);pointer-events:none}
+.portrait{border-radius:22px;border:1px solid rgba(255,255,255,.08)}
+blockquote{border-left:2px solid;border-image:linear-gradient(#ff3b3b,#ff7a59) 1}
+.embed{background:rgba(0,0,0,.5)}
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .8s cubic-bezier(.2,.8,.2,1),transform .8s cubic-bezier(.2,.8,.2,1)}
+.reveal.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none}*{transition:none!important}}
+::selection{background:#ff3b3b;color:#fff}
+</style>
+<style>
+.page-hero{padding:80px 0 48px}.page-hero h1{font-size:clamp(2.4rem,8vw,4.6rem);margin-bottom:18px}.page-hero h1 em{font-style:normal;color:var(--accent)}
+.cards{display:grid;gap:16px}.card{background:var(--bg2);border:1px solid var(--line);border-radius:var(--radius);padding:24px}.card h3{font-size:1.25rem;margin:8px 0}.card p{color:var(--muted)}
+.tag{color:var(--accent);font-size:.75rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase}
+.prose p{color:#d3d7dd;margin-bottom:16px;max-width:680px}
+nav ul a.active{color:var(--accent)}
+@media(min-width:760px){.cards{grid-template-columns:repeat(3,1fr)}.cards.two{grid-template-columns:1fr 1fr}}
+</style>
+<link rel="stylesheet" href="debt-tracker.css">
+<link rel="stylesheet" href="site-nav.css">
+</head><body>
+<nav aria-label="Main navigation"><div class="wrap">
+ <a href="index.html" class="logo">Daniel Motter<span>.</span></a>
+ <ul><li><a href="index.html">Home</a></li><li><a href="about.html">About</a></li><li><a href="get-out-of-debt.html">Get Out of Debt</a></li><li><a href="calculate-your-payment.html">Calculate Your Payment</a></li><li><a href="debt-tracker.html" class="active" aria-current="page">Debt Tracker</a></li><li><a href="channel.html">Channel</a></li></ul>
+ <a href="channel.html" class="btn sm">Watch My Videos</a>
+</div></nav>
+<main id="tracker-main">
+<header class="page-hero"><div class="wrap">
+ <span class="eyebrow">Your numbers. Your progress.</span>
+ <h1>Track your <em>debt journey</em>.</h1>
+ <p class="lead">Keep a record of your real payments and balances. See your progress, recognize milestones, and keep moving forward—one step at a time.</p>
+ <div class="notice"><h2>Before you begin</h2><p>No account or bank connection. This tracker saves only in this browser on this device—not on our server—and does not sync between devices. Anyone using this browser profile can see it. Clearing browser data, private browsing, or blocked storage can lose your progress.</p><p><strong>Download backups regularly.</strong> Backup files contain unencrypted financial information. Store them somewhere safe. Use debt nicknames, never account numbers, passwords, or other sensitive details.</p></div>
+ <noscript><p class="notice">JavaScript is needed to use this local tracker. Nothing has been saved.</p></noscript>
+</div></header>
+<div class="wrap"><p id="save-status" class="notice" role="status" aria-live="polite">Loading your local tracker…</p><p id="action-status" role="status" aria-live="polite"></p></div>
+<section id="overview"><div class="wrap">
+ <div class="sec-head"><span class="eyebrow">The big picture</span><h2>Your progress.</h2><p>This is your tracker, not Daniel's. It starts empty. All amounts are in US dollars.</p></div>
+ <div class="tracker-stats">
+  <div class="stat"><small>Starting balances combined</small><b id="t-start">$0.00</b></div>
+  <div class="stat"><small>Current balances combined</small><b id="t-left">$0.00</b></div>
+  <div class="stat"><small>Net balance reduction</small><b id="t-reduced">$0.00</b></div>
+  <div class="stat"><small>Actual payments logged</small><b id="t-paid">$0.00</b></div>
+ </div>
+ <div class="card" style="margin-top:16px"><h3 id="progress-label">Add your first debt to begin.</h3><div id="t-progress" role="progressbar" aria-labelledby="progress-label" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" class="bar"><i id="t-bar" style="width:0%"></i></div><p id="progress-note" class="note"></p></div>
+ <p class="note">Net balance reduction = starting balances minus current balances. It can be negative if balances rise. Payments may include interest or fees, so payments logged are <strong>not</strong> the same as debt reduced. Adding or deleting a debt changes your baseline and progress.</p>
+</div></section>
+<section id="milestones"><div class="wrap">
+ <div class="sec-head"><span class="eyebrow">Small wins matter</span><h2>Your milestones.</h2><p>These are current statuses, not permanent awards. They use only the debts and history you keep here. Balances rising, adding or deleting a debt, or undoing entries can change or relock them. No earned dates are guessed.</p></div>
+ <ul id="milestone-list" class="milestone-grid" aria-label="Current milestone statuses"></ul>
+ <p class="note">A debt-payoff milestone requires a recorded balance change from above zero to zero and a current balance of zero. An opening balance of zero alone doesn't count as a recorded payoff.</p>
+</div></section>
+<section id="your-debts"><div class="wrap">
+ <div class="sec-head"><span class="eyebrow">Keep it current</span><h2>Your debts.</h2><p>Use the remaining balance from your lender, including any new interest, fees, or borrowing. Log a payment separately from that balance; this tracker never guesses how much went to principal.</p></div>
+ <div id="debt-list" class="debt-list"></div>
+ <div class="card" style="margin-top:24px">
+ <h3>Add a debt</h3><p class="note">Starting partway through? Use the balance when your journey began as your starting balance, then enter the first balance you can verify now. Existing progress counts toward net reduction, but no past payments or events will be invented.</p>
+ <form id="add-debt-form" novalidate>
+ <div class="fields">
+  <div class="wide"><label for="new-name">Debt nickname</label><input id="new-name" maxlength="60" placeholder="e.g. Car loan (no account number)" required autocomplete="off"></div>
+  <div><label for="new-start">Journey start date</label><input id="new-start" type="date" required min="1900-01-01"></div>
+  <div><label for="new-baseline">Balance at journey start ($)</label><input id="new-baseline" inputmode="decimal" placeholder="0.00" required></div>
+  <div><label for="new-date">First recorded balance date</label><input id="new-date" type="date" required min="1900-01-01"></div>
+  <div><label for="new-balance">Remaining balance on that date ($)</label><input id="new-balance" inputmode="decimal" placeholder="0.00" required></div>
+ </div>
+ <p class="note">Dates must be on or before today. The first recorded balance date must be on or after your journey start date. Starting balance must be positive; remaining balance can be zero or higher than the starting balance. Up to 50 debts and 5,000 total history entries; each amount at most $10,000,000.</p>
+ <p id="add-error" class="error" role="alert"></p><button type="submit" class="btn">Add debt</button>
+ </form>
+ </div>
+</div></section>
+<section id="backups"><div class="wrap">
+ <div class="sec-head"><span class="eyebrow">Keep a copy</span><h2>Back up your journey.</h2><p>Download a backup before clearing browser data, switching devices, or making big changes. To move your tracker, import that file in the other browser. There is no automatic sync.</p></div>
+ <div class="card"><p>Backups include nicknames, balances, dates, and payment history in <strong>unencrypted JSON</strong>. Treat them as private financial files. Import replaces the whole tracker, not merges it, and requires confirmation. Only version 1 tracker backups up to 2 MB are accepted.</p>
+ <div class="cta-row tools"><button type="button" class="btn" id="export">Download backup</button></div>
+ <form id="import-form" novalidate><label for="import-file">Choose a tracker backup (.json)</label><input type="file" id="import-file" accept=".json,application/json"><button type="submit" class="btn ghost sm">Check &amp; import backup</button></form>
+ <p id="backup-error" class="error" role="alert"></p><p class="note">Your current tracker stays unchanged if validation fails or you cancel. Download your current backup before replacing it.</p>
+ <hr><button type="button" class="btn ghost sm danger" id="clear">Clear all tracker data</button><p class="note">This removes every debt and entry from this browser's tracker after confirmation. It cannot be undone without a backup.</p>
+ </div>
+ <p class="note">This tool is for recording your own information, not financial advice or a lender statement. Check balances with your lender. No interest or payoff-date estimates are calculated here. For planning, use <a href="calculate-your-payment.html">Calculate Your Payment</a> or read the <a href="get-out-of-debt.html">Get Out of Debt guide</a>.</p>
+</div></section>
+</main>
+<footer><div class="wrap">
+ <div><strong style="color:var(--text)">Daniel Motter</strong><br>"Let no debt remain outstanding, except the continuing debt to love one another." Romans 13:8</div>
+ <div class="links"><a href="debt-tracker.html">Debt Tracker</a><a href="index.html">Home</a><a href="about.html">About</a><a href="channel.html">Channel</a><a href="get-out-of-debt.html">Get Out of Debt</a><a href="calculate-your-payment.html">Calculate Your Payment</a></div>
+ <div style="grid-column:1/-1;font-size:.8rem">© <span id="yr"></span> Daniel Motter. Not financial advice; just my story.</div>
+</div></footer>
+<script>document.getElementById('yr').textContent=new Date().getFullYear();</script>
+<script src="debt-tracker-core.js"></script>
+<script src="debt-tracker-ui.js"></script>
+</body></html>

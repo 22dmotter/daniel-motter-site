@@ -1,0 +1,10 @@
+/* Six links need a shrink-safe second row, rather than a clipped fixed-height bar. */
+nav .wrap{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;height:auto;min-height:60px;padding-top:10px;padding-bottom:10px;gap:8px 16px}
+nav .logo{min-width:0;overflow-wrap:anywhere}
+nav ul{display:flex;order:3;flex-wrap:wrap;width:100%;min-width:0;list-style:none;gap:4px 20px}
+nav ul li{min-width:0;max-width:100%}
+nav ul a{display:inline-block;font-size:.9rem;padding:4px 0;overflow-wrap:anywhere}
+nav .btn{max-width:100%;white-space:normal;text-align:center}
+nav a:focus-visible{outline:2px solid #ff7a59;outline-offset:3px}
+footer .links{min-width:0}footer .links a{overflow-wrap:anywhere;max-width:100%}
+@media(max-width:999px){nav{position:static}}
