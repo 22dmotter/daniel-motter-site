@@ -23,8 +23,8 @@ Published with GitHub Pages from the `main` branch root of the public repo: push
 - All three pages share the same nav (Home, About, Channel) and footer.
 
 ## YouTube link
-The channel URL is `https://www.youtube.com/@danielmotter62`. To swap in the real one, find and replace that string across `index.html`, `about.html`, and `channel.html`, e.g.:
-`sed -i 's#https://www.youtube.com/@danielmotter62#https://youtube.com/@YOURHANDLE#g' *.html`
+The channel URL is `https://www.youtube.com/@DanielEMotter`. To swap in the real one, find and replace that string across `index.html`, `about.html`, and `channel.html`, e.g.:
+`sed -i 's#https://www.youtube.com/@DanielEMotter#https://youtube.com/@YOURHANDLE#g' *.html`
 
 ## Debt numbers and month counter
 At the bottom of `index.html` and `about.html`, edit `DEBT_START` and `PAID` to update the totals; the progress bar and "left to go" calculate automatically. The day counter goes up by one every day, starting at 1 on Nov 3, 2026.
