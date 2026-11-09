@@ -9,6 +9,11 @@ test('five user-confirmed dates and amounts, including Nov 3 opening contributio
  const r=C.report({...C.data,contributions:C.data.contributions.slice(0,5)});
  assert.equal(r.paidCents,89888);assert.equal(r.remainingCents,4821456);assert.equal(r.startingCents,4911344);
 });
+test('current ledger adds Nov 8 $1.00 as Day 6: $899.88 paid, $48,213.56 left',()=>{
+ const r=C.report();assert.equal(C.data.contributions.length,6);assert.deepEqual(C.data.contributions[5],event('2026-11-08',100));
+ assert.equal(r.paidCents,89988);assert.equal(r.remainingCents,4821356);assert.deepEqual(r.days.map(d=>d.journeyDay),[1,2,3,4,5,6]);
+ assert.deepEqual(r.days.map(d=>d.cumulativeCents),[268,6268,52268,89788,89888,89988]);assert.equal(r.lastDate,'2026-11-08');
+});
 test('canonical cumulative totals and journey days are exact',()=>{
  const r=C.report({...C.data,contributions:C.data.contributions.slice(0,5)});
  assert.deepEqual(r.days.map(d=>d.cumulativeCents),[268,6268,52268,89788,89888]);
