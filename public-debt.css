@@ -42,6 +42,9 @@ a.paid-stat-link:focus-visible,a.remaining-stat-link:focus-visible{outline:3px s
 .account-amounts dd{margin:2px 0 0;font-family:"Space Grotesk",Inter,sans-serif;font-size:1rem;overflow-wrap:anywhere}
 .account-tracker{margin-top:18px;border-top:1px solid var(--line);padding-top:14px}
 .account-tracker h4{font-size:1rem;margin:0 0 10px}
+details.account-tracker summary{cursor:pointer;font-weight:600;overflow-wrap:anywhere}
+details.account-tracker summary:focus-visible{outline:3px solid #ff7a59;outline-offset:4px}
+details.account-tracker .account-history{margin-top:12px}
 .account-history{list-style:none;display:grid;gap:8px;margin:0;padding:0}
 .account-history li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 12px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;min-width:0}
 .account-history time{font-weight:600;overflow-wrap:anywhere}.account-history-left{grid-column:1/-1;font-size:.85rem;overflow-wrap:anywhere}

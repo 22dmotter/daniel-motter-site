@@ -69,4 +69,19 @@ test('no-JS fallback has an accessible labeled progress bar, amounts and tracker
   assert.deepEqual(rows,hist,id);assert.equal(card.includes('No contributions recorded yet.'),hist.length===0,id);
  }
 });
+test('no-JS trackers with payments are collapsed native disclosures with payment counts',()=>{
+ const s=fs.readFileSync(path.join(root,'debt-breakdown.html'),'utf8');
+ assert(s.includes('<details class="account-tracker"><summary>Credit Card 2 contribution tracker (5 payments)</summary><ol class="account-history">'));
+ assert(s.includes('<details class="account-tracker"><summary>Credit Card 1 contribution tracker (1 payment)</summary><ol class="account-history">'));
+ assert.equal((s.match(/<details class="account-tracker"/g)||[]).length,2);assert(!/<details class="account-tracker" open/.test(s));
+ assert(fs.readFileSync(path.join(root,'public-debt.css'),'utf8').includes('details.account-tracker summary:focus-visible'));
+});
+test('every page shares one footer: brand + Romans 13:8, links in main-nav order, current page marked',()=>{
+ const order=['index.html','about.html','get-out-of-debt.html','calculate-your-payment.html','channel.html','debt-tracker.html','coming-soon.html','daily-contributions.html','debt-breakdown.html'];
+ for(const f of order){const s=fs.readFileSync(path.join(root,f),'utf8'),ft=s.match(/<footer class="site-footer">([\s\S]*?)<\/footer>/);assert(ft,f);
+  assert(ft[1].includes('<div class="footer-brand"><strong>Daniel Motter</strong><p class="footer-verse">"Let no debt remain outstanding, except the continuing debt to love one another." Romans 13:8</p></div>'),f);
+  const hrefs=[...ft[1].match(/footer-links">([\s\S]*?)<\/div>/)[1].matchAll(/<a href="([^"]+)"/g)].map(m=>m[1]).filter(h=>!h.startsWith('mailto:'));assert.deepEqual(hrefs,order,f);
+  assert.deepEqual([...ft[1].matchAll(/<a href="([^"]+)" aria-current="page"/g)].map(m=>m[1]),[f]);assert(ft[1].includes('class="footer-legal"'));}
+ const css=fs.readFileSync(path.join(root,'site-nav.css'),'utf8');assert(css.includes('footer.site-footer .wrap{display:grid;grid-template-columns:minmax(240px,340px) minmax(0,1fr)'));assert(/@media\(max-width:759px\)\{footer\.site-footer \.wrap\{grid-template-columns:minmax\(0,1fr\)\}/.test(css));
+});
 console.log(count+' public breakdown tests passed');

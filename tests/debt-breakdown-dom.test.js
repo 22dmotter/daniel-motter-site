@@ -44,7 +44,16 @@ test('each debt has a labeled progressbar, amounts and its own tracker after JS 
  assert.deepEqual(cards.map(c=>Array.from(c.querySelectorAll('.account-amounts dd')).map(n=>n.textContent)),[['$15,209.13','$0.00','$15,209.13'],['$612.41','$1.00','$611.41'],['$29,672.33','$0.00','$29,672.33'],['$3,619.57','$898.88','$2,720.69']]);
  assert.deepEqual(cards.map(c=>Array.from(c.querySelectorAll('.account-history li')).map(li=>li.querySelector('time').dateTime+' '+li.querySelector('.account-contribution').textContent)),[[],['2026-11-08 $1.00'],[],['2026-11-03 $2.68','2026-11-04 $60.00','2026-11-05 $460.00','2026-11-06 $375.20','2026-11-07 $1.00']]);
  assert.deepEqual(cards.map(c=>!!c.querySelector('.account-empty')),[true,false,true,false]);
- assert.equal(cards[3].querySelector('.account-tracker').getAttribute('aria-labelledby'),cards[3].querySelector('h4').id);
+ assert.equal(cards[0].querySelector('.account-tracker').getAttribute('aria-labelledby'),cards[0].querySelector('h4').id);
+ x.dom.window.close();
+});
+test('contribution trackers are native disclosures, collapsed by default and keyboard-toggleable',()=>{
+ const x=setup(),cards=Array.from(x.d.querySelectorAll('.balance-card'));
+ const det=cards.map(c=>c.querySelector('details.account-tracker'));
+ assert.deepEqual(det.map(d=>d&&d.querySelector('summary').textContent),[null,'Credit Card 1 contribution tracker (1 payment)',null,'Credit Card 2 contribution tracker (5 payments)']);
+ for(const d of [det[1],det[3]]){assert(!d.open);assert.equal(d.querySelector('summary'),d.firstElementChild);const s=d.querySelector('summary');s.focus();assert.equal(x.d.activeElement,s);d.open=true;assert(d.open);}
+ assert.equal(det[3].querySelectorAll('.account-history li').length,5);
+ for(const i of [0,2]){assert.equal(cards[i].querySelector('section.account-tracker .account-empty').textContent,'No contributions recorded yet.');assert.equal(cards[i].querySelector('h4').textContent,['Car loan','','Student loans'][i]+' contribution tracker');}
  x.dom.window.close();
 });
 test('JS-rendered cards match the no-JS fallback markup',()=>{

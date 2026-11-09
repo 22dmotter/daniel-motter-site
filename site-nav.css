@@ -8,3 +8,15 @@ nav .btn{max-width:100%;white-space:normal;text-align:center}
 nav a:focus-visible{outline:2px solid #ff7a59;outline-offset:3px}
 footer .links{min-width:0}footer .links a{overflow-wrap:anywhere;max-width:100%}
 @media(max-width:999px){nav{position:static}}
+/* Shared footer: readable brand column, tidy link grid in main-nav order, single column on phones. */
+footer.site-footer .wrap{display:grid;grid-template-columns:minmax(240px,340px) minmax(0,1fr);align-items:start;gap:24px 48px}
+footer.site-footer .footer-brand{min-width:0;max-width:340px}
+footer.site-footer .footer-brand strong{display:block;color:var(--text);white-space:nowrap;margin-bottom:6px}
+footer.site-footer .footer-verse{margin:0;line-height:1.55}
+footer.site-footer .footer-links{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px 24px;min-width:0}
+footer.site-footer .footer-links a{min-width:0;overflow-wrap:anywhere;padding:2px 0}
+footer.site-footer .footer-links a[aria-current="page"]{color:var(--text)}
+footer.site-footer .footer-links a:focus-visible{outline:2px solid #ff7a59;outline-offset:3px}
+footer.site-footer .footer-legal{grid-column:1/-1;font-size:.8rem;border-top:1px solid var(--line);padding-top:16px}
+@media(max-width:759px){footer.site-footer .wrap{grid-template-columns:minmax(0,1fr)}footer.site-footer .footer-brand{max-width:none}footer.site-footer .footer-links{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:359px){footer.site-footer .footer-brand strong{white-space:normal}}
