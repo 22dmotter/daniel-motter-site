@@ -6,7 +6,7 @@
   'use strict';
   var snapshots = Object.freeze([
     Object.freeze({ label: 'Car loan', balanceCents: 1520913, reportedDate: '2026-11-08' }),
-    Object.freeze({ label: 'Credit Card 1', balanceCents: 61241, reportedDate: '2026-11-08' }),
+    Object.freeze({ label: 'Credit Card 1', balanceCents: 61141, reportedDate: '2026-11-08' }),
     Object.freeze({ label: 'Student loans', balanceCents: 2967233, reportedDate: '2026-11-08', included: Object.freeze([
       Object.freeze({ label: 'Student loan 1', description: 'Direct Loan—Unsubsidized', balanceCents: 637449 }),
       Object.freeze({ label: 'Student loan 2', description: 'Direct Loan—Subsidized', balanceCents: 228042 }),
