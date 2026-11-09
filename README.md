@@ -62,7 +62,7 @@ History checks: `node tests/debt-contributions.test.js`; optional simulated DOM 
 
 
 ## Daniel's public debt breakdown
-`debt-breakdown.html` (linked from the remaining-balance cards on Home, About and daily contributions) shows each debt with its starting balance, paid amount (green), remaining balance (red), an accessible progress bar (`role="progressbar"` labelled by the debt name, with `aria-valuetext` such as "$898.88 of $3,619.57 paid, $2,720.69 remaining (24.8%)") and its own dated contribution tracker.
+`debt-breakdown.html` (linked from the remaining-balance cards on Home, About and daily contributions) shows each debt with its starting balance, paid amount (green), remaining balance (red), an accessible progress bar (`role="progressbar"` labelled by the debt name, with `aria-valuetext` such as "$898.88 of $3,619.57 paid, $2,720.69 remaining (24.8%)") and its own dated contribution tracker. Every tracker is a native `<details>` disclosure, closed by default, for example "Credit Card 2 contribution tracker (5 payments)" or "Car loan contribution tracker (0 payments)".
 
 **One source of truth.** `debt-contributions.js` defines the four accounts once, each with an id and starting balance:
 
@@ -82,7 +82,7 @@ These add up to the overall starting debt of $49,113.44, and validation rejects 
 **Maintenance steps**
 1. Add the contribution to `debt-contributions.js` with `date`, `amountCents` and `account`. Never guess the account. If Daniel hasn't said which debt was paid, ask before publishing.
 2. Run `node scripts/sync-public-debt.js` to regenerate the no-JS fallbacks: Home/About/history totals and every breakdown card's bar, amounts and tracker. The sync script refuses to run, leaving the pages untouched, if the ledger doesn't validate.
-3. Run all tests (below) before committing. The tests fail if the HTML fallbacks are stale, if an entry is untagged, or if per-debt totals don't reconcile with the overall totals.
+3. Run `node scripts/stamp-assets.js` (see Cache-busting below), then run all tests before committing. The tests fail if the HTML fallbacks are stale, if an entry is untagged, or if per-debt totals don't reconcile with the overall totals.
 4. To add a new debt: add an account (id, label, starting balance) and increase `startingCents` by the same amount, then add a matching entry in `debt-breakdown.js` `details`.
 
 The six student-loan subloans in `details['student-loans'].included` are their starting balances. They must add up exactly to the account's $29,672.33 starting balance and are never counted again in the total. If student-loan payments are recorded later, the combined card's bar and tracker update. The subloan figures stay labelled as starting balances until Daniel reports updated per-loan amounts. No rates, due dates, account identifiers or original screenshot are published.
@@ -90,3 +90,9 @@ The six student-loan subloans in `details['student-loans'].included` are their s
 The mismatch guard still exists. If the itemized figures ever exceed the overall remaining total, the page (including the no-JS fallback) shows an "Update needed" warning and omits any unitemized amount instead of showing a negative or made-up account.
 
 Breakdown checks: `node tests/debt-breakdown.test.js` and `NODE_PATH=/tmp/dm-tracker-test/node_modules node tests/debt-breakdown-dom.test.js` (same temporary jsdom installation as above). No visitor tracker data, bank account details, payment collection or backend is involved.
+
+## Cache-busting (run after any CSS/JS change)
+GitHub Pages serves every file with `Cache-Control: max-age=600`. With unchanged asset URLs, a browser or CDN edge can pair new HTML with CSS/JS cached up to 10 minutes earlier. That happened on Nov 9, 2026: the new footer markup rendered without its new CSS, and stale breakdown JS re-rendered the trackers uncollapsed. Every local stylesheet and script reference therefore carries `?v=<first 10 hex characters of the file's SHA-256>`. After editing any `.css` or `.js` file (including `debt-contributions.js` for a new payment), run `node scripts/stamp-assets.js`. `tests/debt-breakdown.test.js` fails if any stamp is missing or stale.
+
+## Footer
+All pages share one footer (`<footer class="site-footer">`, styled in `site-nav.css`). It has a brand block (name plus Romans 13:8), then links in main-nav order followed by Daily Contributions and Debt Breakdown, with the current page marked `aria-current="page"`, then the legal line. Tests check the order and that the footer rules win the CSS cascade on every page.

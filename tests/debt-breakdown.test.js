@@ -66,22 +66,36 @@ test('no-JS fallback has an accessible labeled progress bar, amounts and tracker
   assert(card.includes('<span class="account-pct-value">'+pct+'%</span> paid off'));
   assert(card.includes('<dd class="account-start">'+start+'</dd></div><div><dt>Paid</dt><dd class="account-paid">'+paid+'</dd></div><div><dt>Remaining</dt><dd class="account-left">'+left+'</dd>'));
   const rows=[...card.matchAll(/<time datetime="([^"]+)">[^<]*<\/time><span class="account-contribution">([^<]*)<\/span><span class="account-history-left">([^<]*) left on this debt/g)].map(m=>[m[1],m[2],m[3]]);
-  assert.deepEqual(rows,hist,id);assert.equal(card.includes('No contributions recorded yet.'),hist.length===0,id);
+  assert.deepEqual(rows,hist,id);assert.equal(card.includes('No contributions recorded yet.'),hist.length===0,id);assert(card.includes('<details class="account-tracker"><summary>'),id);
  }
 });
-test('no-JS trackers with payments are collapsed native disclosures with payment counts',()=>{
+test('no-JS trackers for all four debts are closed native disclosures with payment counts',()=>{
  const s=fs.readFileSync(path.join(root,'debt-breakdown.html'),'utf8');
  assert(s.includes('<details class="account-tracker"><summary>Credit Card 2 contribution tracker (5 payments)</summary><ol class="account-history">'));
  assert(s.includes('<details class="account-tracker"><summary>Credit Card 1 contribution tracker (1 payment)</summary><ol class="account-history">'));
- assert.equal((s.match(/<details class="account-tracker"/g)||[]).length,2);assert(!/<details class="account-tracker" open/.test(s));
+ assert(s.includes('<details class="account-tracker"><summary>Car loan contribution tracker (0 payments)</summary><p class="history-note account-empty">No contributions recorded yet.</p></details>'));assert(s.includes('<summary>Student loans contribution tracker (0 payments)</summary>'));assert.equal((s.match(/<details class="account-tracker"/g)||[]).length,4);assert(!/<details[^>]*\sopen/.test(s));assert(!/<details class="account-tracker" open/.test(s));
  assert(fs.readFileSync(path.join(root,'public-debt.css'),'utf8').includes('details.account-tracker summary:focus-visible'));
 });
 test('every page shares one footer: brand + Romans 13:8, links in main-nav order, current page marked',()=>{
- const order=['index.html','about.html','get-out-of-debt.html','calculate-your-payment.html','channel.html','debt-tracker.html','coming-soon.html','daily-contributions.html','debt-breakdown.html'];
+ const order=['index.html','about.html','get-out-of-debt.html','calculate-your-payment.html','debt-tracker.html','channel.html','coming-soon.html','daily-contributions.html','debt-breakdown.html'];
  for(const f of order){const s=fs.readFileSync(path.join(root,f),'utf8'),ft=s.match(/<footer class="site-footer">([\s\S]*?)<\/footer>/);assert(ft,f);
   assert(ft[1].includes('<div class="footer-brand"><strong>Daniel Motter</strong><p class="footer-verse">"Let no debt remain outstanding, except the continuing debt to love one another." Romans 13:8</p></div>'),f);
   const hrefs=[...ft[1].match(/footer-links">([\s\S]*?)<\/div>/)[1].matchAll(/<a href="([^"]+)"/g)].map(m=>m[1]).filter(h=>!h.startsWith('mailto:'));assert.deepEqual(hrefs,order,f);
   assert.deepEqual([...ft[1].matchAll(/<a href="([^"]+)" aria-current="page"/g)].map(m=>m[1]),[f]);assert(ft[1].includes('class="footer-legal"'));}
  const css=fs.readFileSync(path.join(root,'site-nav.css'),'utf8');assert(css.includes('footer.site-footer .wrap{display:grid;grid-template-columns:minmax(240px,340px) minmax(0,1fr)'));assert(/@media\(max-width:759px\)\{footer\.site-footer \.wrap\{grid-template-columns:minmax\(0,1fr\)\}/.test(css));
+});
+test('every local CSS/JS reference carries a current content-hash version stamp',()=>{
+ const crypto=require('node:crypto');let n=0;
+ for(const f of fs.readdirSync(root).filter(f=>f.endsWith('.html'))){const s=fs.readFileSync(path.join(root,f),'utf8');
+  for(const m of s.matchAll(/(?:<link rel="stylesheet" href|<script src)="([^"]+)"/g)){const u=m[1];if(/^https?:/.test(u))continue;n++;
+   const [asset,v]=u.split('?v=');assert(v,f+' '+u+' is unstamped: run node scripts/stamp-assets.js');
+   assert.equal(v,crypto.createHash('sha256').update(fs.readFileSync(path.join(root,asset))).digest('hex').slice(0,10),f+' '+asset+' stamp is stale: run node scripts/stamp-assets.js');}}
+ assert(n>=27);
+});
+test('footer order matches the main nav, then Daily Contributions and Debt Breakdown',()=>{
+ for(const f of fs.readdirSync(root).filter(f=>f.endsWith('.html')&&f!=='why-debt-is-bad.html')){const s=fs.readFileSync(path.join(root,f),'utf8');
+  const nav=[...s.match(/<nav aria-label="Main navigation">[\s\S]*?<\/ul>/)[0].matchAll(/<li><a href="([^"]+)"/g)].map(m=>m[1]);
+  const foot=[...s.match(/footer-links">([\s\S]*?)<\/div>/)[1].matchAll(/<a href="([^"]+)"/g)].map(m=>m[1]).filter(h=>!h.startsWith('mailto:'));
+  assert.deepEqual(foot,nav.concat(['daily-contributions.html','debt-breakdown.html']),f);}
 });
 console.log(count+' public breakdown tests passed');

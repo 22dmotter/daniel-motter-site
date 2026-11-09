@@ -105,14 +105,14 @@ test('all three HTML summary fallbacks reconcile to authoritative ledger',()=>{
  const r=C.report();for(const f of ['index.html','about.html','daily-contributions.html']){
   const s=fs.readFileSync(path.join(root,f),'utf8');
   for(const [cls,amount] of [['debt-start',r.startingCents],['debt-paid',r.paidCents],['debt-left',r.remainingCents]])assert(s.includes('<b class="'+cls+'">'+C.money(amount)+'</b>'),f+' '+cls+' is stale: run node scripts/sync-public-debt.js');
-  assert(s.includes('src="debt-contributions.js"'));assert(s.indexOf('src="debt-contributions.js"')<s.indexOf('src="public-debt-ui.js"'));assert(!/var DEBT_START|PAID=/.test(s));
+  assert(s.includes('src="debt-contributions.js?v='));assert(s.indexOf('src="debt-contributions.js?v=')<s.indexOf('src="public-debt-ui.js?v='));assert(!/var DEBT_START|PAID=/.test(s));
   if(s.includes('class="pct"'))assert(s.includes('>'+r.percent.toFixed(1)+'%</strong>'));
  }
 });
 test('full paid cards are real links with visible hints and green styling preserved',()=>{
  for(const f of ['index.html','about.html']){
   const s=fs.readFileSync(path.join(root,f),'utf8'), link=s.match(/<a class="stat paid-stat-link" href="daily-contributions.html">([\s\S]*?)<\/a>/);
-  assert(link,f);assert(link[1].includes('class="debt-paid"'));assert(link[1].includes('Paid off so far'));assert(link[1].includes('View daily contributions'));assert(!/button|onclick/.test(link[0]));assert(s.includes('href="public-debt.css"'));
+  assert(link,f);assert(link[1].includes('class="debt-paid"'));assert(link[1].includes('Paid off so far'));assert(link[1].includes('View daily contributions'));assert(!/button|onclick/.test(link[0]));assert(s.includes('href="public-debt.css?v='));
  }
  assert(fs.readFileSync(path.join(root,'public-debt.css'),'utf8').includes('a.paid-stat-link:focus-visible'));
 });

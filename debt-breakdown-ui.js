@@ -19,11 +19,10 @@
     [['Starting', item.startingCents, 'account-start'], ['Paid', item.paidCents, 'account-paid'], ['Remaining', item.balanceCents, 'account-left']].forEach(function (x) {
       var pair = el('div'); pair.append(el('dt', x[0]), el('dd', C.money(x[1]), x[2])); dl.appendChild(pair);
     });
-    var tracker;
+    // Native disclosure for every debt, closed by default (same pattern as the student-loan details).
+    var tracker = el('details', undefined, 'account-tracker');
+    tracker.appendChild(el('summary', item.label + ' contribution tracker (' + item.days.length + (item.days.length === 1 ? ' payment' : ' payments') + ')'));
     if (item.days.length) {
-      // Native disclosure, collapsed by default (same pattern as the student-loan details).
-      tracker = el('details', undefined, 'account-tracker');
-      tracker.appendChild(el('summary', item.label + ' contribution tracker (' + item.days.length + (item.days.length === 1 ? ' payment' : ' payments') + ')'));
       var ol = el('ol', undefined, 'account-history');
       item.days.forEach(function (d) {
         var row = el('li'), t = el('time', C.formatDate(d.date)); t.dateTime = d.date;
@@ -31,12 +30,7 @@
         ol.appendChild(row);
       });
       tracker.appendChild(ol);
-    } else {
-      tracker = el('section', undefined, 'account-tracker');
-      var h4 = el('h4', item.label + ' contribution tracker'); h4.id = nameId + '-tracker';
-      tracker.setAttribute('aria-labelledby', h4.id);
-      tracker.append(h4, el('p', 'No contributions recorded yet.', 'history-note account-empty'));
-    }
+    } else tracker.appendChild(el('p', 'No contributions recorded yet.', 'history-note account-empty'));
     li.append(wrap, dl, tracker);
   }
   r.named.forEach(function (item) {

@@ -43,17 +43,18 @@ test('each debt has a labeled progressbar, amounts and its own tracker after JS 
  assert.deepEqual(bars.map(b=>parseFloat(b.querySelector('i').style.width).toFixed(2)),['0.00','0.16','0.00','24.83']);
  assert.deepEqual(cards.map(c=>Array.from(c.querySelectorAll('.account-amounts dd')).map(n=>n.textContent)),[['$15,209.13','$0.00','$15,209.13'],['$612.41','$1.00','$611.41'],['$29,672.33','$0.00','$29,672.33'],['$3,619.57','$898.88','$2,720.69']]);
  assert.deepEqual(cards.map(c=>Array.from(c.querySelectorAll('.account-history li')).map(li=>li.querySelector('time').dateTime+' '+li.querySelector('.account-contribution').textContent)),[[],['2026-11-08 $1.00'],[],['2026-11-03 $2.68','2026-11-04 $60.00','2026-11-05 $460.00','2026-11-06 $375.20','2026-11-07 $1.00']]);
- assert.deepEqual(cards.map(c=>!!c.querySelector('.account-empty')),[true,false,true,false]);
- assert.equal(cards[0].querySelector('.account-tracker').getAttribute('aria-labelledby'),cards[0].querySelector('h4').id);
+ assert.deepEqual(cards.map(c=>!!c.querySelector('details.account-tracker .account-empty')),[true,false,true,false]);
+ assert.equal(x.d.querySelectorAll('.account-tracker h4').length,0);
  x.dom.window.close();
 });
-test('contribution trackers are native disclosures, collapsed by default and keyboard-toggleable',()=>{
+test('all four contribution trackers are native disclosures, closed after JS render, keyboard-toggleable',()=>{
  const x=setup(),cards=Array.from(x.d.querySelectorAll('.balance-card'));
- const det=cards.map(c=>c.querySelector('details.account-tracker'));
- assert.deepEqual(det.map(d=>d&&d.querySelector('summary').textContent),[null,'Credit Card 1 contribution tracker (1 payment)',null,'Credit Card 2 contribution tracker (5 payments)']);
- for(const d of [det[1],det[3]]){assert(!d.open);assert.equal(d.querySelector('summary'),d.firstElementChild);const s=d.querySelector('summary');s.focus();assert.equal(x.d.activeElement,s);d.open=true;assert(d.open);}
+ const det=cards.map(c=>c.querySelector(':scope > details.account-tracker'));
+ assert.deepEqual(det.map(d=>d.querySelector('summary').textContent),['Car loan contribution tracker (0 payments)','Credit Card 1 contribution tracker (1 payment)','Student loans contribution tracker (0 payments)','Credit Card 2 contribution tracker (5 payments)']);
+ assert.equal(x.d.querySelectorAll('details[open]').length,0,'no disclosure may render open');assert.equal(x.d.querySelectorAll('.account-tracker:not(details)').length,0);assert.equal(x.d.querySelectorAll('.account-history:not(details .account-history)').length,0,'tracker rows must live inside a disclosure');
+ for(const d of det){assert(!d.open);assert(!d.hasAttribute('open'));const s=d.querySelector('summary');assert.equal(s,d.firstElementChild);s.focus();assert.equal(x.d.activeElement,s);d.open=true;assert(d.open);}
  assert.equal(det[3].querySelectorAll('.account-history li').length,5);
- for(const i of [0,2]){assert.equal(cards[i].querySelector('section.account-tracker .account-empty').textContent,'No contributions recorded yet.');assert.equal(cards[i].querySelector('h4').textContent,['Car loan','','Student loans'][i]+' contribution tracker');}
+ for(const i of [0,2])assert.equal(det[i].querySelector('.account-empty').textContent,'No contributions recorded yet.');
  x.dom.window.close();
 });
 test('JS-rendered cards match the no-JS fallback markup',()=>{
@@ -66,5 +67,19 @@ test('per-debt starting/remaining figures are red and paid figures green',()=>{
  for(const n of x.d.querySelectorAll('.account-start,.account-left,.account-history-left'))assert.equal(x.w.getComputedStyle(n).color,'rgb(255, 59, 59)',n.textContent);
  for(const n of x.d.querySelectorAll('.account-paid,.account-contribution,.account-pct-value'))assert.equal(x.w.getComputedStyle(n).color,'rgb(34, 197, 94)',n.textContent);
  assert.equal(x.d.querySelectorAll('.account-start').length,4);assert.equal(x.d.querySelectorAll('.account-contribution').length,6);x.dom.window.close();
+});
+test('footer layout rules win the cascade on every page with stylesheets in real load order',()=>{
+ for(const f of ['index.html','about.html','get-out-of-debt.html','calculate-your-payment.html','debt-tracker.html','channel.html','coming-soon.html','daily-contributions.html','debt-breakdown.html']){
+  const html=fs.readFileSync(path.join(root,f),'utf8').replace(/<link rel="stylesheet" href="([A-Za-z0-9._-]+\.css)\?v=[0-9a-f]+">/g,(m,h)=>'<style>'+fs.readFileSync(path.join(root,h),'utf8')+'</style>');
+  const w=new JSDOM(html).window,d=w.document,cs=n=>w.getComputedStyle(n);
+  assert.equal(cs(d.querySelector('footer .wrap')).gridTemplateColumns,'minmax(240px,340px) minmax(0,1fr)',f);
+  assert.equal(cs(d.querySelector('.footer-legal')).gridColumn,'1/-1',f);assert.equal(cs(d.querySelector('.footer-links')).display,'grid',f);
+  assert.equal(cs(d.querySelector('.footer-brand strong')).whiteSpace,'nowrap',f);w.close();
+ }
+});
+test('breakdown page JS never adds open attributes or replaces footer markup',()=>{
+ const ui=fs.readFileSync(path.join(root,'debt-breakdown-ui.js'),'utf8');assert(!/\.open\s*=|setAttribute\(\s*'open'|footer/.test(ui));
+ const x=setup(),before=fs.readFileSync(path.join(root,'debt-breakdown.html'),'utf8').match(/<footer class="site-footer">[\s\S]*?<\/footer>/)[0];
+ assert.equal(x.d.querySelector('footer').outerHTML.replace(/<span id="yr"><\/span>/,''),before.replace(/<span id="yr"><\/span>/,''));x.dom.window.close();
 });
 console.log(count+' public breakdown DOM tests passed');

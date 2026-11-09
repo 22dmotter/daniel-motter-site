@@ -10,9 +10,12 @@ function progressBlock(d) {
   if (d.startingCents === undefined) return '';
   const pct = d.percent.toFixed(1), nameId = 'debt-' + d.id + '-name';
   const valueText = C.money(d.paidCents) + ' of ' + C.money(d.startingCents) + ' paid, ' + C.money(d.balanceCents) + ' remaining (' + pct + '%)';
-  const tracker = d.days.length
-    ? '<details class="account-tracker"><summary>' + escape(d.label) + ' contribution tracker (' + d.days.length + (d.days.length === 1 ? ' payment' : ' payments') + ')</summary><ol class="account-history">' + d.days.map(h => '<li><time datetime="' + h.date + '">' + C.formatDate(h.date) + '</time><span class="account-contribution">' + C.money(h.amountCents) + '</span><span class="account-history-left">' + C.money(h.remainingCents) + ' left on this debt</span></li>').join('') + '</ol></details>'
-    : '<section class="account-tracker" aria-labelledby="' + nameId + '-tracker"><h4 id="' + nameId + '-tracker">' + escape(d.label) + ' contribution tracker</h4><p class="history-note account-empty">No contributions recorded yet.</p></section>';
+  // Every debt's tracker is a native disclosure, closed by default (never emit an open attribute).
+  const tracker = '<details class="account-tracker"><summary>' + escape(d.label) + ' contribution tracker (' + d.days.length + (d.days.length === 1 ? ' payment' : ' payments') + ')</summary>'
+    + (d.days.length
+      ? '<ol class="account-history">' + d.days.map(h => '<li><time datetime="' + h.date + '">' + C.formatDate(h.date) + '</time><span class="account-contribution">' + C.money(h.amountCents) + '</span><span class="account-history-left">' + C.money(h.remainingCents) + ' left on this debt</span></li>').join('') + '</ol>'
+      : '<p class="history-note account-empty">No contributions recorded yet.</p>')
+    + '</details>';
   return '<div class="account-progress"><div class="account-bar" role="progressbar" aria-labelledby="' + nameId + '" aria-valuemin="0" aria-valuemax="100" aria-valuenow="' + pct + '" aria-valuetext="' + escape(valueText) + '"><i style="width:' + Math.min(100, d.percent).toFixed(6) + '%"></i></div><p class="account-pct"><span class="account-pct-value">' + pct + '%</span> paid off</p></div>'
     + '<dl class="account-amounts"><div><dt>Starting</dt><dd class="account-start">' + C.money(d.startingCents) + '</dd></div><div><dt>Paid</dt><dd class="account-paid">' + C.money(d.paidCents) + '</dd></div><div><dt>Remaining</dt><dd class="account-left">' + C.money(d.balanceCents) + '</dd></div></dl>'
     + tracker;
