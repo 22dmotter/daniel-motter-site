@@ -22,6 +22,9 @@ Published with GitHub Pages from the `main` branch root of the public repo: push
 - **channel.html**: subscribe buttons, featured video slots, and what viewers will find.
 - All three pages share the same nav (Home, About, Channel) and footer.
 
+## YouTube Shorts
+The Shorts grid on Home and Channel (`#shorts`) is generated from **`youtube-shorts.js`**. Daniel posts on two channels: `@danielmotter62` (channel ID `UCdjRkPxSJKIUjvW5IwaKrvQ`, which hosts the featured Short `ap-y7-83m4E` and long-form video `GZ6XsM35GkQ`) and `@DanielEMotter` (`UCWDgb6-LZA7pFCzMnAUGw0g`). To add a Short, confirm it's public and embeddable (`https://www.youtube.com/oembed?url=https://www.youtube.com/shorts/<id>&format=json` returns 200), copy its exact title, add it to the list (newest first, after the featured Short), then run `node scripts/sync-shorts.js`, `node scripts/stamp-assets.js` and the tests. The featured Short loads as a lazy iframe; the rest are lite thumbnails (`shorts-lite.js`, `shorts.css`) that link to YouTube and swap in the same embed on click. `tests/shorts.test.js` fails if the pages drift from the data.
+
 ## YouTube link
 The channel URL is `https://www.youtube.com/@DanielEMotter`. To swap in the real one, find and replace that string across `index.html`, `about.html`, and `channel.html`, e.g.:
 `sed -i 's#https://www.youtube.com/@DanielEMotter#https://youtube.com/@YOURHANDLE#g' *.html`
