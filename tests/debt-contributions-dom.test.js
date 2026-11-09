@@ -23,7 +23,7 @@ test('history renders six genuine dated contributions and accurate running total
  assert.equal(rows[4].querySelectorAll('dd')[1].textContent,'$898.88');assert.equal(rows[5].querySelectorAll('dd')[1].textContent,'$899.88');assert.equal(rows[5].querySelector('.tag').textContent,'Day 6');assert.equal(x.d.querySelector('.last-contribution-date').dateTime,'2026-11-08');assert.equal(x.d.querySelector('.pct').textContent,'1.8%');x.dom.window.close();
 });
 test('additional same-day contribution dynamically groups and refreshes summaries',()=>{
- const x=setup('daily-contributions.html',{date:'2026-11-07',amountCents:112});assert.equal(x.d.querySelectorAll('.contribution-record').length,6);assert.equal(x.d.querySelector('.debt-paid').textContent,'$901.00');assert.equal(x.d.querySelector('.debt-left').textContent,'$48,212.44');
+ const x=setup('daily-contributions.html',{date:'2026-11-07',amountCents:112,account:'credit-card-2'});assert.equal(x.d.querySelectorAll('.contribution-record').length,6);assert.equal(x.d.querySelector('.debt-paid').textContent,'$901.00');assert.equal(x.d.querySelector('.debt-left').textContent,'$48,212.44');
  const last=x.d.querySelectorAll('.contribution-record')[4];assert.equal(last.querySelector('.contribution-amount').textContent,'$2.12');assert.equal(last.querySelectorAll('dd')[1].textContent,'$900.00');x.dom.window.close();
 });
 console.log(count+' public contribution DOM tests passed');

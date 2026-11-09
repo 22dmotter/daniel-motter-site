@@ -1,19 +1,48 @@
-/* Render literal labels. Never read visitor tracker data or guess payment allocations. */
+/* Render literal labels with textContent. Per-debt figures come from the tagged ledger; never reads visitor tracker data. */
 (function () {
   'use strict';
   var C = window.DanielDebt, r = window.DanielDebtBreakdown.report(), list = document.getElementById('breakdown-list');
   if (!list) return;
   function el(tag, text, cls) { var n = document.createElement(tag); if (text !== undefined) n.textContent = text; if (cls) n.className = cls; return n; }
   var fragment = document.createDocumentFragment();
+  function progress(li, item) {
+    if (item.startingCents === undefined) return;
+    var pct = item.percent.toFixed(1), nameId = 'debt-' + item.id + '-name';
+    var wrap = el('div', undefined, 'account-progress'), bar = el('div', undefined, 'account-bar'), fill = el('i');
+    bar.setAttribute('role', 'progressbar'); bar.setAttribute('aria-labelledby', nameId);
+    bar.setAttribute('aria-valuemin', '0'); bar.setAttribute('aria-valuemax', '100'); bar.setAttribute('aria-valuenow', pct);
+    bar.setAttribute('aria-valuetext', C.money(item.paidCents) + ' of ' + C.money(item.startingCents) + ' paid, ' + C.money(item.balanceCents) + ' remaining (' + pct + '%)');
+    fill.style.width = Math.min(100, item.percent) + '%'; bar.appendChild(fill);
+    var label = el('p', undefined, 'account-pct'); label.append(el('span', pct + '%', 'account-pct-value'), document.createTextNode(' paid off'));
+    wrap.append(bar, label);
+    var dl = el('dl', undefined, 'account-amounts');
+    [['Starting', item.startingCents, 'account-start'], ['Paid', item.paidCents, 'account-paid'], ['Remaining', item.balanceCents, 'account-left']].forEach(function (x) {
+      var pair = el('div'); pair.append(el('dt', x[0]), el('dd', C.money(x[1]), x[2])); dl.appendChild(pair);
+    });
+    var tracker = el('section', undefined, 'account-tracker'), h4 = el('h4', item.label + ' contribution tracker');
+    h4.id = nameId + '-tracker'; tracker.setAttribute('aria-labelledby', h4.id); tracker.appendChild(h4);
+    if (item.days.length) {
+      var ol = el('ol', undefined, 'account-history');
+      item.days.forEach(function (d) {
+        var row = el('li'), t = el('time', C.formatDate(d.date)); t.dateTime = d.date;
+        row.append(t, el('span', C.money(d.amountCents), 'account-contribution'), el('span', C.money(d.remainingCents) + ' left on this debt', 'account-history-left'));
+        ol.appendChild(row);
+      });
+      tracker.appendChild(ol);
+    } else tracker.appendChild(el('p', 'No contributions recorded yet.', 'history-note account-empty'));
+    li.append(wrap, dl, tracker);
+  }
   r.named.forEach(function (item) {
-    var li = el('li', undefined, 'card balance-card');
-    li.append(el('h3', item.label), el('b', C.money(item.balanceCents), 'balance-value'));
-    var p = el('p', 'Reported ', 'history-note'), time = el('time', C.formatDate(item.reportedDate));
+    var li = el('li', undefined, 'card balance-card'), h3 = el('h3', item.label);
+    if (item.id) { li.id = 'debt-' + item.id; h3.id = 'debt-' + item.id + '-name'; }
+    li.append(h3, el('b', C.money(item.balanceCents), 'balance-value'));
+    var p = el('p', 'Remaining · itemized ', 'history-note'), time = el('time', C.formatDate(item.reportedDate));
     time.dateTime = item.reportedDate; p.appendChild(time); li.appendChild(p);
+    progress(li, item);
     if (item.included) {
       var details = el('details', undefined, 'student-loans'), summary = el('summary', 'View ' + item.included.length + ' student loans');
-      var includedNote = el('p', 'Included in the ', 'history-note');
-      includedNote.append(el('span', C.money(item.balanceCents), 'debt-amount'), document.createTextNode(' above—not additional debt.'));
+      var includedNote = el('p', 'These starting balances make up the ', 'history-note');
+      includedNote.append(el('span', C.money(item.startingCents !== undefined ? item.startingCents : item.balanceCents), 'debt-amount'), document.createTextNode(' starting balance—not additional debt.'));
       details.append(summary, includedNote);
       var children = el('ol', undefined, 'included-loans');
       item.included.forEach(function (child) {

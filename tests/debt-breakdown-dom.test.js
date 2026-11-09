@@ -10,7 +10,7 @@ function setup(file='debt-breakdown.html',total,items){const dom=new JSDOM(fs.re
  if(items){const B=w.DanielDebtBreakdown;w.DanielDebtBreakdown={...B,report:()=>B.report(total,items)};}
  w.eval(fs.readFileSync(path.join(root,'debt-breakdown-ui.js'),'utf8'));return {dom,w,d:w.document};}
 test('remaining cards are keyboard-focusable native links on Home, About and history',()=>{for(const f of ['index.html','about.html','daily-contributions.html']){const x=setup(f),a=x.d.querySelector('.remaining-stat-link');assert(a);a.focus();assert.equal(x.d.activeElement,a);assert.equal(a.href,'https://22dmotter.github.io/daniel-motter-site/debt-breakdown.html');assert.equal(a.querySelector('.debt-left').textContent,'$48,213.56');x.dom.window.close();}});
-test('four balance cards reconcile and retain reported snapshot dates',()=>{const x=setup();assert.deepEqual(Array.from(x.d.querySelectorAll('.balance-value')).map(n=>n.textContent),['$15,209.13','$611.41','$29,672.33','$2,720.69']);assert.deepEqual(Array.from(x.d.querySelectorAll('.balance-card time')).map(n=>n.dateTime),['2026-11-08','2026-11-08','2026-11-08','2026-11-08']);const w=x.d.getElementById('breakdown-warning');assert(w.hidden);assert.equal(x.d.querySelectorAll('.unitemized').length,0);assert.equal(x.d.querySelector('.debt-paid').textContent,'$899.88');x.dom.window.close();});
+test('four balance cards reconcile and retain reported snapshot dates',()=>{const x=setup();assert.deepEqual(Array.from(x.d.querySelectorAll('.balance-value')).map(n=>n.textContent),['$15,209.13','$611.41','$29,672.33','$2,720.69']);assert.deepEqual(Array.from(x.d.querySelectorAll('.balance-card > .history-note time')).map(n=>n.dateTime),['2026-11-08','2026-11-08','2026-11-08','2026-11-08']);const w=x.d.getElementById('breakdown-warning');assert(w.hidden);assert.equal(x.d.querySelectorAll('.unitemized').length,0);assert.equal(x.d.querySelector('.debt-paid').textContent,'$899.88');x.dom.window.close();});
 test('mismatch is visible without altering named balances or inventing negative remainder',()=>{const x=setup('debt-breakdown.html',1000000);assert(!x.d.getElementById('breakdown-warning').hidden);assert(x.d.getElementById('breakdown-warning').textContent.includes('$38,213.56'));assert.equal(x.d.querySelectorAll('.unitemized').length,0);assert.equal(x.d.querySelector('.balance-value').textContent,'$15,209.13');assert.equal(x.d.querySelector('.debt-left').textContent,'$10,000.00');x.dom.window.close();});
 test('HTML-looking nicknames render only as literal text',()=>{const label='<img src=x onerror=alert(1)>',x=setup('debt-breakdown.html',100,[{label,balanceCents:29,reportedDate:'2026-11-08'}]);assert.equal(x.d.querySelector('.balance-card h3').textContent,label);assert.equal(x.d.querySelectorAll('.balance-card img').length,0);assert.equal(x.d.querySelectorAll('.balance-value')[1].textContent,'$0.71');x.dom.window.close();});
 test('student detail is native collapsed expansion with six included balances and no double count',()=>{
@@ -33,5 +33,29 @@ test('breakdown red selectors do not change Home remaining or paid colors',()=>{
 });
 test('no-JavaScript fallback has the same red debt amounts and green paid value',()=>{
  const dom=new JSDOM(fs.readFileSync(path.join(root,'debt-breakdown.html'),'utf8'),{runScripts:'outside-only'}),x={dom,w:dom.window,d:dom.window.document};colors(x);const nodes=x.d.querySelectorAll('.debt-start,.debt-left,.balance-value,.included-balance,.debt-amount');assert.equal(nodes.length,13);nodes.forEach(n=>assert.equal(x.w.getComputedStyle(n).color,'rgb(255, 59, 59)'));assert.equal(x.w.getComputedStyle(x.d.querySelector('.debt-paid')).color,'rgb(34, 197, 94)');x.dom.window.close();
+});
+test('each debt has a labeled progressbar, amounts and its own tracker after JS render',()=>{
+ const x=setup(),cards=Array.from(x.d.querySelectorAll('.balance-card'));
+ const bars=cards.map(c=>c.querySelector('[role="progressbar"]'));
+ assert.deepEqual(bars.map(b=>x.d.getElementById(b.getAttribute('aria-labelledby')).textContent),['Car loan','Credit Card 1','Student loans','Credit Card 2']);
+ assert.deepEqual(bars.map(b=>[b.getAttribute('aria-valuemin'),b.getAttribute('aria-valuemax'),b.getAttribute('aria-valuenow')]),[['0','100','0.0'],['0','100','0.2'],['0','100','0.0'],['0','100','24.8']]);
+ assert.equal(bars[3].getAttribute('aria-valuetext'),'$898.88 of $3,619.57 paid, $2,720.69 remaining (24.8%)');assert.equal(bars[1].getAttribute('aria-valuetext'),'$1.00 of $612.41 paid, $611.41 remaining (0.2%)');
+ assert.deepEqual(bars.map(b=>parseFloat(b.querySelector('i').style.width).toFixed(2)),['0.00','0.16','0.00','24.83']);
+ assert.deepEqual(cards.map(c=>Array.from(c.querySelectorAll('.account-amounts dd')).map(n=>n.textContent)),[['$15,209.13','$0.00','$15,209.13'],['$612.41','$1.00','$611.41'],['$29,672.33','$0.00','$29,672.33'],['$3,619.57','$898.88','$2,720.69']]);
+ assert.deepEqual(cards.map(c=>Array.from(c.querySelectorAll('.account-history li')).map(li=>li.querySelector('time').dateTime+' '+li.querySelector('.account-contribution').textContent)),[[],['2026-11-08 $1.00'],[],['2026-11-03 $2.68','2026-11-04 $60.00','2026-11-05 $460.00','2026-11-06 $375.20','2026-11-07 $1.00']]);
+ assert.deepEqual(cards.map(c=>!!c.querySelector('.account-empty')),[true,false,true,false]);
+ assert.equal(cards[3].querySelector('.account-tracker').getAttribute('aria-labelledby'),cards[3].querySelector('h4').id);
+ x.dom.window.close();
+});
+test('JS-rendered cards match the no-JS fallback markup',()=>{
+ const html=fs.readFileSync(path.join(root,'debt-breakdown.html'),'utf8'),norm=s=>s.replace(/ style="width:\s*([0-9.]+)%;?"/g,(_,w)=>' style="'+parseFloat(w).toFixed(4)+'"').replace(/<!--[\s\S]*?-->/g,'').replace(/>\s+</g,'><').trim();
+ const fallback=new JSDOM(html).window.document.getElementById('breakdown-list').innerHTML,x=setup();
+ assert.equal(norm(x.d.getElementById('breakdown-list').innerHTML),norm(fallback));x.dom.window.close();
+});
+test('per-debt starting/remaining figures are red and paid figures green',()=>{
+ const x=setup();colors(x);
+ for(const n of x.d.querySelectorAll('.account-start,.account-left,.account-history-left'))assert.equal(x.w.getComputedStyle(n).color,'rgb(255, 59, 59)',n.textContent);
+ for(const n of x.d.querySelectorAll('.account-paid,.account-contribution,.account-pct-value'))assert.equal(x.w.getComputedStyle(n).color,'rgb(34, 197, 94)',n.textContent);
+ assert.equal(x.d.querySelectorAll('.account-start').length,4);assert.equal(x.d.querySelectorAll('.account-contribution').length,6);x.dom.window.close();
 });
 console.log(count+' public breakdown DOM tests passed');

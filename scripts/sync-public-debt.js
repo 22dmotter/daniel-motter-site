@@ -1,15 +1,28 @@
-/* Run after editing debt-contributions.js or debt-breakdown.js to update no-JS HTML fallbacks.
+/* Run after editing debt-contributions.js (contributions/accounts) or debt-breakdown.js (display details)
+   to update no-JS HTML fallbacks, including per-debt progress bars and trackers.
    Tests deliberately fail if fallbacks diverge from the authoritative ledger. */
 'use strict';
 const fs = require('node:fs'), path = require('node:path');
 const root = path.join(__dirname, '..'), C = require('../debt-contributions'), r = C.report();
 const B = require('../debt-breakdown'), breakdown = B.report(r.remainingCents);
 function escape(s) { return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function progressBlock(d) {
+  if (d.startingCents === undefined) return '';
+  const pct = d.percent.toFixed(1), nameId = 'debt-' + d.id + '-name';
+  const valueText = C.money(d.paidCents) + ' of ' + C.money(d.startingCents) + ' paid, ' + C.money(d.balanceCents) + ' remaining (' + pct + '%)';
+  const history = d.days.length
+    ? '<ol class="account-history">' + d.days.map(h => '<li><time datetime="' + h.date + '">' + C.formatDate(h.date) + '</time><span class="account-contribution">' + C.money(h.amountCents) + '</span><span class="account-history-left">' + C.money(h.remainingCents) + ' left on this debt</span></li>').join('') + '</ol>'
+    : '<p class="history-note account-empty">No contributions recorded yet.</p>';
+  return '<div class="account-progress"><div class="account-bar" role="progressbar" aria-labelledby="' + nameId + '" aria-valuemin="0" aria-valuemax="100" aria-valuenow="' + pct + '" aria-valuetext="' + escape(valueText) + '"><i style="width:' + Math.min(100, d.percent).toFixed(6) + '%"></i></div><p class="account-pct"><span class="account-pct-value">' + pct + '%</span> paid off</p></div>'
+    + '<dl class="account-amounts"><div><dt>Starting</dt><dd class="account-start">' + C.money(d.startingCents) + '</dd></div><div><dt>Paid</dt><dd class="account-paid">' + C.money(d.paidCents) + '</dd></div><div><dt>Remaining</dt><dd class="account-left">' + C.money(d.balanceCents) + '</dd></div></dl>'
+    + '<section class="account-tracker" aria-labelledby="' + nameId + '-tracker"><h4 id="' + nameId + '-tracker">' + escape(d.label) + ' contribution tracker</h4>' + history + '</section>';
+}
 function balanceRecords() {
   const rows = breakdown.named.map(d => {
     let detail = '';
-    if (d.included) detail = '<details class="student-loans"><summary>View '+d.included.length+' student loans</summary><p class="history-note">Included in the <span class="debt-amount">'+C.money(d.balanceCents)+'</span> above—not additional debt.</p><ol class="included-loans">'+d.included.map(child => '<li><strong>'+escape(child.label)+'</strong><p>'+escape(child.description)+'</p><span class="included-balance">'+C.money(child.balanceCents)+'</span></li>').join('')+'</ol></details>';
-    return '<li class="card balance-card"><h3>'+escape(d.label)+'</h3><b class="balance-value">'+C.money(d.balanceCents)+'</b><p class="history-note">Reported <time datetime="'+d.reportedDate+'">'+C.formatDate(d.reportedDate)+'</time></p>'+detail+'</li>';
+    if (d.included) detail = '<details class="student-loans"><summary>View '+d.included.length+' student loans</summary><p class="history-note">These starting balances make up the <span class="debt-amount">'+C.money(d.startingCents !== undefined ? d.startingCents : d.balanceCents)+'</span> starting balance—not additional debt.</p><ol class="included-loans">'+d.included.map(child => '<li><strong>'+escape(child.label)+'</strong><p>'+escape(child.description)+'</p><span class="included-balance">'+C.money(child.balanceCents)+'</span></li>').join('')+'</ol></details>';
+    const idAttr = d.id ? ' id="debt-'+d.id+'"' : '', h3 = d.id ? '<h3 id="debt-'+d.id+'-name">' : '<h3>';
+    return '<li class="card balance-card"'+idAttr+'>'+h3+escape(d.label)+'</h3><b class="balance-value">'+C.money(d.balanceCents)+'</b><p class="history-note">Remaining · itemized <time datetime="'+d.reportedDate+'">'+C.formatDate(d.reportedDate)+'</time></p>'+progressBlock(d)+detail+'</li>';
   });
   if (!breakdown.mismatch && breakdown.unitemizedCents > 0) rows.push('<li class="card balance-card unitemized"><h3>Other debt—not yet itemized</h3><b class="balance-value">'+C.money(breakdown.unitemizedCents)+'</b><p class="history-note">Calculated remainder, not a separate reported account. More individual balances can be added as I report them.</p></li>');
   return rows.join('\n  ');

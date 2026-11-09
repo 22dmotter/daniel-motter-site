@@ -54,18 +54,39 @@ Tests: `node tests/debt-tracker.test.js` and `node tests/payment-calculator.test
 
 
 ## Daniel's public daily contributions
-`daily-contributions.html` is Daniel's self-reported payoff history, linked from the full green paid stat card on Home and About. These are recorded contribution dates, not verified bank settlement dates, and missing dates are not zero-payment entries. The initial $2.68 is confirmed for Nov 3, 2026 (Day 1); the five dated updates total $898.88. This public ledger is entirely separate from visitors' private local Debt Trackers.
+`daily-contributions.html` is Daniel's self-reported payoff history, linked from the full green paid stat card on Home and About. These are recorded contribution dates, not verified bank settlement dates, and missing dates are not zero-payment entries. The initial $2.68 is confirmed for Nov 3, 2026 (Day 1); the six dated updates through Nov 8, 2026 total $899.88. This public ledger is entirely separate from visitors' private local Debt Trackers.
 
-For a new payment update, add a dated positive whole-cent contribution to **`debt-contributions.js`**, the one authoritative source for Daniel's starting amount, journey start and contributions. Multiple entries on the same date are grouped and chronological totals are derived automatically. Never add guessed dates or zero-value days. Run **`node scripts/sync-public-debt.js`** to refresh the Home/About/history HTML fallbacks, then **`node tests/debt-contributions.test.js`** and the existing regression tests before committing. The history test rejects stale fallbacks, so a ledger update cannot silently publish mismatched public totals. `public-debt-ui.js` derives all three live summaries from this same source without fetching an API or touching visitor storage. `public-debt.css` provides the linked-card focus styles and responsive history cards.
+For a new payment update, add a dated positive whole-cent contribution **with its `account` id** to **`debt-contributions.js`**, the one authoritative source for Daniel's starting amount, per-debt starting balances, journey start and contributions. Example: `Object.freeze({ date: '2026-11-09', amountCents: 2500, account: 'car-loan' })`. Multiple entries on the same date are grouped and chronological totals are derived automatically. Never add guessed dates or zero-value days. Run **`node scripts/sync-public-debt.js`** to refresh the Home/About/history HTML fallbacks, then **`node tests/debt-contributions.test.js`** and the existing regression tests before committing. The history test rejects stale fallbacks, so a ledger update cannot silently publish mismatched public totals. `public-debt-ui.js` derives all three live summaries from this same source without fetching an API or touching visitor storage. `public-debt.css` provides the linked-card focus styles and responsive history cards.
 
 History checks: `node tests/debt-contributions.test.js`; optional simulated DOM checks using the same temporary jsdom installation: `NODE_PATH=/tmp/dm-tracker-test/node_modules node tests/debt-contributions-dom.test.js`.
 
 
 ## Daniel's public debt breakdown
-`debt-breakdown.html` shows the reported account balances linked from the remaining-balance cards on Home, About and daily contributions. `debt-breakdown.js` holds the latest named account snapshots in whole cents with their reported dates. The current entries are Car loan $15,209.13, Credit Card 1 $612.41, Student loans (combined) $29,672.33 and Credit Card 2 $2,720.69, recorded Nov 8, 2026. The overall total still comes only from `debt-contributions.js`. The user assigned the current remainder to Credit Card 2: 48,214.56 − 15,209.13 − 612.41 − 29,672.33 = 2,720.69. All four currently reconcile to $48,214.56 with no unitemized remainder. Credit Card 2 is stored as that explicit snapshot, NOT a dynamic remainder or automatic sink for future payments. If a later partial itemization leaves an unitemized remainder, it is calculated and labeled rather than invented as an account; naming additional balances reduces that gap rather than increasing the overall total.
+`debt-breakdown.html` (linked from the remaining-balance cards on Home, About and daily contributions) shows each debt with its starting balance, paid amount (green), remaining balance (red), an accessible progress bar (`role="progressbar"` labelled by the debt name, with `aria-valuetext` such as "$898.88 of $3,619.57 paid, $2,720.69 remaining (24.8%)") and its own dated contribution tracker.
 
-For new or corrected individual balances, update `debt-breakdown.js` with only the amounts/dates Daniel reports, then run `node scripts/sync-public-debt.js` and all tests to update/check the four public summary fallbacks and breakdown. New overall contributions do **not** identify which account was paid: never auto-allocate or proportion them across these snapshots. Named balances remain unchanged until updated explicitly. If their sum later exceeds the overall remaining balance, the page (including the no-JavaScript fallback) shows an update-needed warning and omits the unitemized amount instead of displaying a negative/fake account or silently changing the known balances.
+**One source of truth.** `debt-contributions.js` defines the four accounts once, each with an id and starting balance:
+
+| id | Debt | Starting balance |
+|---|---|---|
+| `car-loan` | Car loan | $15,209.13 |
+| `credit-card-1` | Credit Card 1 | $612.41 |
+| `student-loans` | Student loans (combined) | $29,672.33 |
+| `credit-card-2` | Credit Card 2 | $3,619.57 |
+
+These add up to the overall starting debt of $49,113.44, and validation rejects the ledger if they don't. Every contribution names the account it paid. The Nov 3–7, 2026 contributions ($898.88) went to Credit Card 2, and the Nov 8, 2026 $1.00 went to Credit Card 1. Each debt's remaining balance is its starting balance minus its tagged contributions, so the four debts always add up to the overall remaining total ($48,213.56 as of Nov 8, 2026). No balances are typed into `debt-breakdown.js`. That file only holds display details per account id: the itemized date and the student-loan subloans. Validation rejects:
+- a contribution with no account or an unknown account
+- a debt paid beyond its starting balance
+- duplicate or malformed ids
+- breakdown details for an unknown or missing account
+
+**Maintenance steps**
+1. Add the contribution to `debt-contributions.js` with `date`, `amountCents` and `account`. Never guess the account. If Daniel hasn't said which debt was paid, ask before publishing.
+2. Run `node scripts/sync-public-debt.js` to regenerate the no-JS fallbacks: Home/About/history totals and every breakdown card's bar, amounts and tracker. The sync script refuses to run, leaving the pages untouched, if the ledger doesn't validate.
+3. Run all tests (below) before committing. The tests fail if the HTML fallbacks are stale, if an entry is untagged, or if per-debt totals don't reconcile with the overall totals.
+4. To add a new debt: add an account (id, label, starting balance) and increase `startingCents` by the same amount, then add a matching entry in `debt-breakdown.js` `details`.
+
+The six student-loan subloans in `details['student-loans'].included` are their starting balances. They must add up exactly to the account's $29,672.33 starting balance and are never counted again in the total. If student-loan payments are recorded later, the combined card's bar and tracker update. The subloan figures stay labelled as starting balances until Daniel reports updated per-loan amounts. No rates, due dates, account identifiers or original screenshot are published.
+
+The mismatch guard still exists. If the itemized figures ever exceed the overall remaining total, the page (including the no-JS fallback) shows an "Update needed" warning and omits any unitemized amount instead of showing a negative or made-up account.
 
 Breakdown checks: `node tests/debt-breakdown.test.js` and `NODE_PATH=/tmp/dm-tracker-test/node_modules node tests/debt-breakdown-dom.test.js` (same temporary jsdom installation as above). No visitor tracker data, bank account details, payment collection or backend is involved.
-
-The Student loans snapshot includes six expandable subloan balances in `included`. They must sum exactly to the parent $29,672.33 and are never added again to the four-category total. When updating that parent amount, update the supplied subloan snapshots too (or omit unverified detail); validation rejects a mismatched subtotal instead of guessing allocation. No rates, due dates, account identifiers or original screenshot are published.

@@ -31,3 +31,23 @@ a.paid-stat-link:focus-visible,a.remaining-stat-link:focus-visible{outline:3px s
 #debt-breakdown-page .balance-value,
 #debt-breakdown-page .included-balance,
 #debt-breakdown-page .debt-amount{color:#ff3b3b}
+
+/* Per-debt progress and contribution trackers (breakdown page). */
+.account-progress{margin-top:16px}
+.account-bar{height:12px;border-radius:999px;background:#232830;overflow:hidden;border:1px solid #2e343d}
+.account-bar i{display:block;height:100%;min-width:0;background:#22c55e;border-radius:999px}
+.account-pct{margin-top:8px;font-size:.9rem;color:var(--muted)}.account-pct-value{color:#22c55e;font-weight:600}
+.account-amounts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:14px}
+.account-amounts div{min-width:0}.account-amounts dt{font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.account-amounts dd{margin:2px 0 0;font-family:"Space Grotesk",Inter,sans-serif;font-size:1rem;overflow-wrap:anywhere}
+.account-tracker{margin-top:18px;border-top:1px solid var(--line);padding-top:14px}
+.account-tracker h4{font-size:1rem;margin:0 0 10px}
+.account-history{list-style:none;display:grid;gap:8px;margin:0;padding:0}
+.account-history li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 12px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;min-width:0}
+.account-history time{font-weight:600;overflow-wrap:anywhere}.account-history-left{grid-column:1/-1;font-size:.85rem;overflow-wrap:anywhere}
+.account-empty{font-size:.9rem}
+.account-paid,.account-contribution{color:#22c55e}
+#debt-breakdown-page .account-start,
+#debt-breakdown-page .account-left,
+#debt-breakdown-page .account-history-left{color:#ff3b3b}
+@media(max-width:420px){.account-amounts{grid-template-columns:minmax(0,1fr)}.account-history li{grid-template-columns:minmax(0,1fr)}}
