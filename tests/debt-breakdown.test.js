@@ -77,8 +77,8 @@ test('no-JS trackers for all four debts are closed native disclosures with payme
  assert(fs.readFileSync(path.join(root,'public-debt.css'),'utf8').includes('details.account-tracker summary:focus-visible'));
 });
 test('every page shares one footer: brand + Romans 13:8, links in main-nav order, current page marked',()=>{
- const order=['index.html','about.html','get-out-of-debt.html','calculate-your-payment.html','debt-tracker.html','channel.html','coming-soon.html','daily-contributions.html','debt-breakdown.html'];
- for(const f of order){const s=fs.readFileSync(path.join(root,f),'utf8'),ft=s.match(/<footer class="site-footer">([\s\S]*?)<\/footer>/);assert(ft,f);
+ const order=['index.html','about.html','get-out-of-debt.html','calculate-your-payment.html','debt-tracker.html','channel.html','blog/','coming-soon.html','daily-contributions.html','debt-breakdown.html'];
+ for(const f of order.filter(h=>h.endsWith('.html'))){const s=fs.readFileSync(path.join(root,f),'utf8'),ft=s.match(/<footer class="site-footer">([\s\S]*?)<\/footer>/);assert(ft,f);
   assert(ft[1].includes('<div class="footer-brand"><strong>Daniel Motter</strong><p class="footer-verse">"Let no debt remain outstanding, except the continuing debt to love one another." Romans 13:8</p></div>'),f);
   const hrefs=[...ft[1].match(/footer-links">([\s\S]*?)<\/div>/)[1].matchAll(/<a href="([^"]+)"/g)].map(m=>m[1]).filter(h=>!h.startsWith('mailto:'));assert.deepEqual(hrefs,order,f);
   assert.deepEqual([...ft[1].matchAll(/<a href="([^"]+)" aria-current="page"/g)].map(m=>m[1]),[f]);assert(ft[1].includes('class="footer-legal"'));}
@@ -86,11 +86,13 @@ test('every page shares one footer: brand + Romans 13:8, links in main-nav order
 });
 test('every local CSS/JS reference carries a current content-hash version stamp',()=>{
  const crypto=require('node:crypto');let n=0;
- for(const f of fs.readdirSync(root).filter(f=>f.endsWith('.html'))){const s=fs.readFileSync(path.join(root,f),'utf8');
+ const blog=fs.existsSync(path.join(root,'blog'))?fs.readdirSync(path.join(root,'blog')).filter(f=>f.endsWith('.html')).map(f=>'blog/'+f):[];
+ for(const f of fs.readdirSync(root).filter(f=>f.endsWith('.html')).concat(blog)){const s=fs.readFileSync(path.join(root,f),'utf8');
   for(const m of s.matchAll(/(?:<link rel="stylesheet" href|<script src)="([^"]+)"/g)){const u=m[1];if(/^https?:/.test(u))continue;n++;
    const [asset,v]=u.split('?v=');assert(v,f+' '+u+' is unstamped: run node scripts/stamp-assets.js');
-   assert.equal(v,crypto.createHash('sha256').update(fs.readFileSync(path.join(root,asset))).digest('hex').slice(0,10),f+' '+asset+' stamp is stale: run node scripts/stamp-assets.js');}}
- assert(n>=27);
+   const file=path.join(root,path.dirname(f),asset);assert(fs.existsSync(file),f+' references missing '+asset);
+   assert.equal(v,crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex').slice(0,10),f+' '+asset+' stamp is stale: run node scripts/stamp-assets.js');}}
+ assert(n>=27+4*51);
 });
 test('footer order matches the main nav, then Daily Contributions and Debt Breakdown',()=>{
  for(const f of fs.readdirSync(root).filter(f=>f.endsWith('.html')&&f!=='why-debt-is-bad.html')){const s=fs.readFileSync(path.join(root,f),'utf8');

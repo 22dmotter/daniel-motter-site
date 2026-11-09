@@ -6,10 +6,14 @@
 const fs = require('node:fs'), path = require('node:path'), crypto = require('node:crypto');
 const root = path.join(__dirname, '..');
 const hash = f => crypto.createHash('sha256').update(fs.readFileSync(path.join(root, f))).digest('hex').slice(0, 10);
-const re = /(<link rel="stylesheet" href="|<script src=")([A-Za-z0-9._-]+\.(?:css|js))(?:\?v=[0-9a-f]+)?(")/g;
-for (const file of fs.readdirSync(root).filter(f => f.endsWith('.html')).sort()) {
+// Matches local refs, optionally one level up (blog pages use ../asset.css).
+const re = /(<link rel="stylesheet" href="|<script src=")((?:\.\.\/)?)([A-Za-z0-9._-]+\.(?:css|js))(?:\?v=[0-9a-f]+)?(")/g;
+const blogDir = path.join(root, 'blog');
+const files = fs.readdirSync(root).filter(f => f.endsWith('.html')).sort()
+  .concat(fs.existsSync(blogDir) ? fs.readdirSync(blogDir).filter(f => f.endsWith('.html')).sort().map(f => 'blog/' + f) : []);
+for (const file of files) {
   const p = path.join(root, file), s = fs.readFileSync(p, 'utf8');
-  const out = s.replace(re, (_, a, asset, b) => a + asset + '?v=' + hash(asset) + b);
+  const out = s.replace(re, (_, a, up, asset, b) => a + up + asset + '?v=' + hash(asset) + b);
   if (out !== s) fs.writeFileSync(p, out);
 }
 console.log('Stamped local CSS/JS references with content hashes.');

@@ -30,7 +30,19 @@ The channel URL is `https://www.youtube.com/@DanielEMotter`. To swap in the real
 Add each recorded contribution to `debt-contributions.js`, then run `node scripts/sync-public-debt.js` and the history tests (see below). Public totals and progress derive from that one ledger. The day counter goes up by one every day, starting at 1 on Nov 3, 2026.
 
 ## SEO
-Each page has a keyword-focused title and description, a canonical URL, Open Graph/Twitter tags for link previews, and schema.org structured data. `robots.txt` and `sitemap.xml` are included. All URLs use `https://22dmotter.github.io/daniel-motter-site`; if you add a custom domain, find-and-replace that address across the HTML, `robots.txt`, and `sitemap.xml`.
+Each page (including every blog article) has a keyword-focused title and description, a canonical URL, Open Graph/Twitter tags for link previews, and schema.org structured data. `robots.txt` and `sitemap.xml` are included. All URLs use `https://22dmotter.github.io/daniel-motter-site`; if you add a custom domain, find-and-replace that address across the HTML, `robots.txt`, and `sitemap.xml`.
+
+## Blog (50 SEO articles)
+`/blog/` holds 50 static articles answering common debt and personal-finance questions, plus `blog/index.html` with eight categories. **Edit the Markdown sources in `content/blog/*.md`, never the generated HTML.** Each source has front matter (`title`, `h1`, `description` ≤155 characters, `category`, `related` slugs, `answer` for the opening short answer) and a body using `##`/`###` headings, `- ` and `1. ` lists, `|` tables, `> ` callouts, `@journey` (Daniel's live payoff box), and `@faq` followed by `Q:`/`A:` lines. Inline `{start}`, `{paid}` and `{left}` render ledger figures from `debt-contributions.js`.
+
+Rebuild in this order after editing an article, the ledger, or any CSS/JS:
+1. `node scripts/build-blog.js` regenerates every post (Article, FAQPage and BreadcrumbList JSON-LD, canonical, Open Graph tags, breadcrumbs, related links, CTAs, disclaimer), the blog index, and `sitemap.xml` (with `lastmod` from git).
+2. `node scripts/sync-public-debt.js` (also refreshes blog journey figures).
+3. `node scripts/stamp-assets.js` (also stamps `../` asset references in `blog/*.html`).
+
+`tests/blog.test.js` checks that 50 posts exist; titles, descriptions, canonicals and H1s are unique; JSON-LD is valid and mirrors the visible FAQ; every article has at least 1,000 words; no paragraph is duplicated across articles; there are no broken internal links or fragments anywhere on the site; the sitemap lists every page; journey figures match the ledger; Romans 13:8 is the only verse cited; and the committed HTML matches a fresh build. Example figures in the articles were computed, not estimated; recompute them if you change an example.
+
+**Search Console:** github.io project sites can't be domain properties. Add a URL-prefix property for `https://22dmotter.github.io/daniel-motter-site/`, verify it with the HTML meta tag Google provides (add it to the `<head>` of `index.html`), then submit `sitemap.xml`. Crawlers only read `robots.txt` at the host root, so the `Sitemap:` line in this subpath's `robots.txt` isn't discovered automatically.
 
 ## Get Out of Debt guide
 `get-out-of-debt.html`: a practical SEO guide with a working payoff calculator, why debt hurts, a 7-step plan, snowball vs. avalanche comparison, ways to find extra money, Romans 13:8, and an FAQ (Article, HowTo, FAQ, and breadcrumb structured data). The old `why-debt-is-bad.html` address redirects here via a small `why-debt-is-bad.html` redirect page (GitHub Pages) and `_redirects` (Netlify only).

@@ -39,7 +39,10 @@ function balanceStatus() {
 function records() {
   return r.days.map(d => '  <li class="card contribution-record"><p class="tag">Day ' + d.journeyDay + '</p><h3><time datetime="' + d.date + '">' + C.formatDate(d.date) + '</time></h3><dl class="contribution-amounts"><div><dt>Reported that day</dt><dd class="contribution-amount">' + C.money(d.amountCents) + '</dd></div><div><dt>Cumulative paid</dt><dd>' + C.money(d.cumulativeCents) + '</dd></div><div><dt>Remaining*</dt><dd>' + C.money(d.remainingCents) + '</dd></div></dl></li>').join('\n');
 }
-for (const file of ['index.html','about.html','daily-contributions.html','debt-breakdown.html']) {
+// Blog pages (built by scripts/build-blog.js) carry the same journey classes, so keep them in sync too.
+const blogDir = path.join(root, 'blog');
+const blogFiles = fs.existsSync(blogDir) ? fs.readdirSync(blogDir).filter(f => f.endsWith('.html')).sort().map(f => 'blog/' + f) : [];
+for (const file of ['index.html','about.html','daily-contributions.html','debt-breakdown.html', ...blogFiles]) {
   const p = path.join(root, file); let s = fs.readFileSync(p,'utf8');
   for (const [cls, val] of [['debt-start',r.startingCents],['debt-paid',r.paidCents],['debt-left',r.remainingCents]]) {
     s = s.replace(new RegExp('(<b class="'+cls+'">)[^<]*(</b>)','g'), (_,a,b) => a+C.money(val)+b);

@@ -99,7 +99,7 @@ async function importRaw(x,raw,size=Buffer.byteLength(raw)) {
   const x=setup();add(x);const newer=C.serialize(C.empty());x.changeStore(newer);log(x,'20','90');assert.equal(x.saved(),newer);assert(x.$('save-status').textContent.includes('Another tab'));assert(x.$('new-name').disabled);x.dom.window.close();
  });
  await test('tracker nav project links are present and correctly based',()=>{
-  const x=setup();const links=Array.from(x.w.document.querySelectorAll('nav ul a'));assert.equal(links.length,7);assert(links.some(n=>n.href==='https://22dmotter.github.io/daniel-motter-site/coming-soon.html'));assert(links.some(n=>n.href==='https://22dmotter.github.io/daniel-motter-site/debt-tracker.html'&&n.getAttribute('aria-current')==='page'));x.dom.window.close();
+  const x=setup();const links=Array.from(x.w.document.querySelectorAll('nav ul a'));assert.equal(links.length,8);assert(links.some(n=>n.href==='https://22dmotter.github.io/daniel-motter-site/blog/'));assert(links.some(n=>n.href==='https://22dmotter.github.io/daniel-motter-site/coming-soon.html'));assert(links.some(n=>n.href==='https://22dmotter.github.io/daniel-motter-site/debt-tracker.html'&&n.getAttribute('aria-current')==='page'));x.dom.window.close();
  });
  console.log(count+' simulated DOM tests passed');
 })().catch(e=>{console.error(e);process.exitCode=1;});
