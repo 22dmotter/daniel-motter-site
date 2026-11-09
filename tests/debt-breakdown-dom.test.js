@@ -10,7 +10,7 @@ function setup(file='debt-breakdown.html',total,items){const dom=new JSDOM(fs.re
  if(items){const B=w.DanielDebtBreakdown;w.DanielDebtBreakdown={...B,report:()=>B.report(total,items)};}
  w.eval(fs.readFileSync(path.join(root,'debt-breakdown-ui.js'),'utf8'));return {dom,w,d:w.document};}
 test('remaining cards are keyboard-focusable native links on Home, About and history',()=>{for(const f of ['index.html','about.html','daily-contributions.html']){const x=setup(f),a=x.d.querySelector('.remaining-stat-link');assert(a);a.focus();assert.equal(x.d.activeElement,a);assert.equal(a.href,'https://22dmotter.github.io/daniel-motter-site/debt-breakdown.html');assert.equal(a.querySelector('.debt-left').textContent,'$48,213.56');x.dom.window.close();}});
-test('four balance cards reconcile and retain reported snapshot dates',()=>{const x=setup();assert.deepEqual(Array.from(x.d.querySelectorAll('.balance-value')).map(n=>n.textContent),['$15,209.13','$611.41','$29,672.33','$2,720.69']);assert.deepEqual(Array.from(x.d.querySelectorAll('.balance-card > .history-note time')).map(n=>n.dateTime),['2026-11-08','2026-11-08','2026-11-08','2026-11-08']);const w=x.d.getElementById('breakdown-warning');assert(w.hidden);assert.equal(x.d.querySelectorAll('.unitemized').length,0);assert.equal(x.d.querySelector('.debt-paid').textContent,'$899.88');x.dom.window.close();});
+test('four balance cards reconcile and retain reported snapshot dates',()=>{const x=setup();assert.deepEqual(Array.from(x.d.querySelectorAll('.balance-value')).map(n=>n.textContent),['$15,209.13','$610.41','$29,672.33','$2,721.69']);assert.deepEqual(Array.from(x.d.querySelectorAll('.balance-card > .history-note time')).map(n=>n.dateTime),['2026-11-08','2026-11-08','2026-11-08','2026-11-08']);const w=x.d.getElementById('breakdown-warning');assert(w.hidden);assert.equal(x.d.querySelectorAll('.unitemized').length,0);assert.equal(x.d.querySelector('.debt-paid').textContent,'$899.88');x.dom.window.close();});
 test('mismatch is visible without altering named balances or inventing negative remainder',()=>{const x=setup('debt-breakdown.html',1000000);assert(!x.d.getElementById('breakdown-warning').hidden);assert(x.d.getElementById('breakdown-warning').textContent.includes('$38,213.56'));assert.equal(x.d.querySelectorAll('.unitemized').length,0);assert.equal(x.d.querySelector('.balance-value').textContent,'$15,209.13');assert.equal(x.d.querySelector('.debt-left').textContent,'$10,000.00');x.dom.window.close();});
 test('HTML-looking nicknames render only as literal text',()=>{const label='<img src=x onerror=alert(1)>',x=setup('debt-breakdown.html',100,[{label,balanceCents:29,reportedDate:'2026-11-08'}]);assert.equal(x.d.querySelector('.balance-card h3').textContent,label);assert.equal(x.d.querySelectorAll('.balance-card img').length,0);assert.equal(x.d.querySelectorAll('.balance-value')[1].textContent,'$0.71');x.dom.window.close();});
 test('student detail is native collapsed expansion with six included balances and no double count',()=>{
@@ -38,11 +38,11 @@ test('each debt has a labeled progressbar, amounts and its own tracker after JS 
  const x=setup(),cards=Array.from(x.d.querySelectorAll('.balance-card'));
  const bars=cards.map(c=>c.querySelector('[role="progressbar"]'));
  assert.deepEqual(bars.map(b=>x.d.getElementById(b.getAttribute('aria-labelledby')).textContent),['Car loan','Credit Card 1','Student loans','Credit Card 2']);
- assert.deepEqual(bars.map(b=>[b.getAttribute('aria-valuemin'),b.getAttribute('aria-valuemax'),b.getAttribute('aria-valuenow')]),[['0','100','0.0'],['0','100','0.2'],['0','100','0.0'],['0','100','24.8']]);
- assert.equal(bars[3].getAttribute('aria-valuetext'),'$898.88 of $3,619.57 paid, $2,720.69 remaining (24.8%)');assert.equal(bars[1].getAttribute('aria-valuetext'),'$1.00 of $612.41 paid, $611.41 remaining (0.2%)');
- assert.deepEqual(bars.map(b=>parseFloat(b.querySelector('i').style.width).toFixed(2)),['0.00','0.16','0.00','24.83']);
- assert.deepEqual(cards.map(c=>Array.from(c.querySelectorAll('.account-amounts dd')).map(n=>n.textContent)),[['$15,209.13','$0.00','$15,209.13'],['$612.41','$1.00','$611.41'],['$29,672.33','$0.00','$29,672.33'],['$3,619.57','$898.88','$2,720.69']]);
- assert.deepEqual(cards.map(c=>Array.from(c.querySelectorAll('.account-history li')).map(li=>li.querySelector('time').dateTime+' '+li.querySelector('.account-contribution').textContent)),[[],['2026-11-08 $1.00'],[],['2026-11-03 $2.68','2026-11-04 $60.00','2026-11-05 $460.00','2026-11-06 $375.20','2026-11-07 $1.00']]);
+ assert.deepEqual(bars.map(b=>[b.getAttribute('aria-valuemin'),b.getAttribute('aria-valuemax'),b.getAttribute('aria-valuenow')]),[['0','100','0.0'],['0','100','0.3'],['0','100','0.0'],['0','100','24.8']]);
+ assert.equal(bars[3].getAttribute('aria-valuetext'),'$897.88 of $3,619.57 paid, $2,721.69 remaining (24.8%)');assert.equal(bars[1].getAttribute('aria-valuetext'),'$2.00 of $612.41 paid, $610.41 remaining (0.3%)');
+ assert.deepEqual(bars.map(b=>parseFloat(b.querySelector('i').style.width).toFixed(2)),['0.00','0.33','0.00','24.81']);
+ assert.deepEqual(cards.map(c=>Array.from(c.querySelectorAll('.account-amounts dd')).map(n=>n.textContent)),[['$15,209.13','$0.00','$15,209.13'],['$612.41','$2.00','$610.41'],['$29,672.33','$0.00','$29,672.33'],['$3,619.57','$897.88','$2,721.69']]);
+ assert.deepEqual(cards.map(c=>Array.from(c.querySelectorAll('.account-history li')).map(li=>li.querySelector('time').dateTime+' '+li.querySelector('.account-contribution').textContent)),[[],['2026-11-07 $1.00','2026-11-08 $1.00'],[],['2026-11-03 $2.68','2026-11-04 $60.00','2026-11-05 $460.00','2026-11-06 $375.20']]);
  assert.deepEqual(cards.map(c=>!!c.querySelector('details.account-tracker .account-empty')),[true,false,true,false]);
  assert.equal(x.d.querySelectorAll('.account-tracker h4').length,0);
  x.dom.window.close();
@@ -50,10 +50,10 @@ test('each debt has a labeled progressbar, amounts and its own tracker after JS 
 test('all four contribution trackers are native disclosures, closed after JS render, keyboard-toggleable',()=>{
  const x=setup(),cards=Array.from(x.d.querySelectorAll('.balance-card'));
  const det=cards.map(c=>c.querySelector(':scope > details.account-tracker'));
- assert.deepEqual(det.map(d=>d.querySelector('summary').textContent),['Car loan contribution tracker (0 payments)','Credit Card 1 contribution tracker (1 payment)','Student loans contribution tracker (0 payments)','Credit Card 2 contribution tracker (5 payments)']);
+ assert.deepEqual(det.map(d=>d.querySelector('summary').textContent),['Car loan contribution tracker (0 payments)','Credit Card 1 contribution tracker (2 payments)','Student loans contribution tracker (0 payments)','Credit Card 2 contribution tracker (4 payments)']);
  assert.equal(x.d.querySelectorAll('details[open]').length,0,'no disclosure may render open');assert.equal(x.d.querySelectorAll('.account-tracker:not(details)').length,0);assert.equal(x.d.querySelectorAll('.account-history:not(details .account-history)').length,0,'tracker rows must live inside a disclosure');
  for(const d of det){assert(!d.open);assert(!d.hasAttribute('open'));const s=d.querySelector('summary');assert.equal(s,d.firstElementChild);s.focus();assert.equal(x.d.activeElement,s);d.open=true;assert(d.open);}
- assert.equal(det[3].querySelectorAll('.account-history li').length,5);
+ assert.equal(det[3].querySelectorAll('.account-history li').length,4);
  for(const i of [0,2])assert.equal(det[i].querySelector('.account-empty').textContent,'No contributions recorded yet.');
  x.dom.window.close();
 });
