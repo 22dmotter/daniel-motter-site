@@ -97,4 +97,16 @@ test('committed blog pages match a fresh build from content/blog (build, sync, s
   assert.equal(fs.readdirSync(path.join(dir,'blog')).length,fs.readdirSync(path.join(root,'blog')).length);
  }finally{fs.rmSync(dir,{recursive:true,force:true});}
 });
+test('only the site header and the Free tools sidebar are sticky; the TOC and breadcrumbs are static with no blur layer',()=>{
+ const css=read('blog.css').replace(/\/\*[\s\S]*?\*\//g,''),rules=[...css.matchAll(/([^{}]+)\{([^{}]*)\}/g)].map(m=>({sel:m[1].trim(),body:m[2]})).filter(r=>!r.sel.startsWith('@'));
+ const sticky=rules.filter(r=>/position:\s*sticky/.test(r.body)).map(r=>r.sel);assert.deepEqual(sticky.sort(),['.side-box','nav[aria-label="Main navigation"]'].sort());
+ const blur=rules.filter(r=>/backdrop-filter:\s*(?!none)/.test(r.body)).map(r=>r.sel);assert.deepEqual(blur,['nav[aria-label="Main navigation"]']);
+ assert(!rules.some(r=>r.sel.split(',').some(x=>x.trim()==='nav')),'bare nav selector would also hit .toc and .crumbs');
+ const reset=rules.find(r=>r.sel==='nav.crumbs,nav.toc');assert(reset&&/position:static/.test(reset.body)&&/backdrop-filter:none/.test(reset.body));
+ const side=rules.find(r=>r.sel==='.side-box'),header=rules.find(r=>r.sel==='nav[aria-label="Main navigation"]');
+ assert(parseInt(side.body.match(/top:(\d+)px/)[1],10)>=110,'sidebar must clear the ~100px sticky header');
+ assert(parseInt(side.body.match(/z-index:(\d+)/)[1],10)<parseInt(header.body.match(/z-index:(\d+)/)[1],10));
+ for(const p of posts){assert(/<nav class="toc" aria-labelledby="toc-h">/.test(p.html),p.file);assert(!/<nav class="toc"[^>]*style=/.test(p.html),p.file);assert(p.html.indexOf('<nav class="toc"')<p.html.indexOf('<aside class="side"'),p.file);}
+ assert(!/\.toc[^{]*\{[^}]*(sticky|fixed)/.test(css)&&!/\.toc[^{]*\{[^}]*(sticky|fixed)/.test(read('site-nav.css')));
+});
 console.log(count+' blog tests passed');

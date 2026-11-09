@@ -7,12 +7,13 @@ h1,h2,h3{font-family:"Space Grotesk",Inter,sans-serif;line-height:1.12;letter-sp
 a{color:inherit}
 .wrap{max-width:var(--max);margin:0 auto;padding:0 20px}
 .wrap>*{min-width:0}
-nav{position:sticky;top:0;z-index:10;background:rgba(11,13,16,.6);backdrop-filter:blur(18px) saturate(160%);-webkit-backdrop-filter:blur(18px) saturate(160%);border-bottom:1px solid rgba(255,255,255,.06)}
+/* Only the site header is sticky. Scoped so in-page navs (.crumbs, .toc) never inherit sticky/blur. */
+nav[aria-label="Main navigation"]{position:sticky;top:0;z-index:10;background:rgba(11,13,16,.6);backdrop-filter:blur(18px) saturate(160%);-webkit-backdrop-filter:blur(18px) saturate(160%);border-bottom:1px solid rgba(255,255,255,.06)}
 .logo{font-family:"Space Grotesk";font-weight:700;font-size:1.15rem;text-decoration:none}
 .logo span{color:var(--accent)}
-nav ul a{text-decoration:none;color:var(--muted)}
-nav ul a:hover{color:var(--text)}
-nav ul a.active{color:var(--accent)}
+nav[aria-label="Main navigation"] ul a{text-decoration:none;color:var(--muted)}
+nav[aria-label="Main navigation"] ul a:hover{color:var(--text)}
+nav[aria-label="Main navigation"] ul a.active{color:var(--accent)}
 .btn{display:inline-block;background:var(--accent);color:var(--accent-ink);font-weight:600;text-decoration:none;padding:12px 20px;border-radius:999px;border:0;font-size:1rem;font-family:inherit;box-shadow:0 8px 24px -10px rgba(255,59,59,.7);transition:transform .25s,box-shadow .25s}
 .btn:hover{transform:translateY(-2px)}
 .btn.ghost{background:rgba(255,255,255,.04);color:var(--text);border:1px solid rgba(255,255,255,.12);box-shadow:none}
@@ -45,6 +46,8 @@ nav ul a.active{color:var(--accent)}
 .article th,.article td{text-align:left;padding:11px 12px;border-bottom:1px solid rgba(255,255,255,.07);vertical-align:top;color:#d3d7dd}
 .article th{color:#ff9b82;font-family:"Space Grotesk";font-weight:600;background:rgba(255,255,255,.03)}
 .article tr:last-child td{border-bottom:0}
+nav.crumbs,nav.toc{position:static;z-index:auto;backdrop-filter:none;-webkit-backdrop-filter:none}
+nav.crumbs{background:none;border-bottom:0}
 .toc{border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:16px 18px;margin-bottom:8px;background:rgba(255,255,255,.02)}
 .toc h2{font-size:1rem;margin:0 0 8px}
 .toc ol{margin:0 0 0 20px;gap:4px}
@@ -68,7 +71,8 @@ nav ul a.active{color:var(--accent)}
 .disclaimer p{color:var(--muted)}
 .sources{font-size:.9rem}
 aside.side{min-width:0}
-.side-box{position:sticky;top:90px;border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:18px;background:rgba(255,255,255,.02)}
+/* Sticky sidebar clears the sticky header (about 100px tall on desktop) and stays beneath it. */
+.side-box{position:sticky;top:124px;z-index:1;border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:18px;background:rgba(255,255,255,.02)}
 .side-box h2{font-size:1rem;margin-bottom:10px}
 .side-box ul{list-style:none;display:grid;gap:8px;font-size:.9rem}
 .side-box a{color:var(--muted);text-decoration:none}.side-box a:hover{color:var(--text)}
