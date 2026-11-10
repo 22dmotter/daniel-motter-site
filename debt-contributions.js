@@ -22,8 +22,8 @@
       Object.freeze({ date: '2026-11-03', amountCents: 268, account: 'credit-card-2' }),
       Object.freeze({ date: '2026-11-04', amountCents: 6000, account: 'credit-card-2' }),
       Object.freeze({ date: '2026-11-05', amountCents: 46000, account: 'credit-card-2' }),
-      // Nov 6 was one $375.20 day split across two cards (Daniel, Nov 9, 2026).
-      Object.freeze({ date: '2026-11-06', amountCents: 37313, account: 'credit-card-2' }),
+      // Nov 6 was one $375.20 day split across two debts: $373.13 car payment, $2.07 Credit Card 1 (Daniel, Nov 10, 2026).
+      Object.freeze({ date: '2026-11-06', amountCents: 37313, account: 'car-loan' }),
       Object.freeze({ date: '2026-11-06', amountCents: 207, account: 'credit-card-1' }),
       Object.freeze({ date: '2026-11-07', amountCents: 100, account: 'credit-card-1' }),
       Object.freeze({ date: '2026-11-08', amountCents: 100, account: 'credit-card-1' }),

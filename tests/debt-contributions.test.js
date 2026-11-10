@@ -7,7 +7,7 @@ const event = (date,amountCents) => ({date,amountCents});
 const tagged = (date,amountCents,account) => ({date,amountCents,account});
 const accounts = list => list.map(([id,startingCents])=>({id,label:id,startingCents}));
 test('five user-confirmed dates and amounts, including Nov 3 opening contribution and the split Nov 6 day',()=>{
- assert.deepEqual(C.data.contributions.slice(0,6),[tagged('2026-11-03',268,'credit-card-2'),tagged('2026-11-04',6000,'credit-card-2'),tagged('2026-11-05',46000,'credit-card-2'),tagged('2026-11-06',37313,'credit-card-2'),tagged('2026-11-06',207,'credit-card-1'),tagged('2026-11-07',100,'credit-card-1')]);
+ assert.deepEqual(C.data.contributions.slice(0,6),[tagged('2026-11-03',268,'credit-card-2'),tagged('2026-11-04',6000,'credit-card-2'),tagged('2026-11-05',46000,'credit-card-2'),tagged('2026-11-06',37313,'car-loan'),tagged('2026-11-06',207,'credit-card-1'),tagged('2026-11-07',100,'credit-card-1')]);
  const r=C.report({...C.data,contributions:C.data.contributions.slice(0,6)});
  assert.equal(r.paidCents,89888);assert.equal(r.remainingCents,4821456);assert.equal(r.startingCents,4911344);
 });
@@ -20,11 +20,11 @@ test('current ledger adds Nov 9 $20.00 to Credit Card 1 as Day 7: $919.88 paid, 
  assert.equal(r.paidCents,91988);assert.equal(r.remainingCents,4819356);assert.deepEqual(r.days.map(d=>d.journeyDay),[1,2,3,4,5,6,7]);
  assert.deepEqual(r.days.map(d=>d.cumulativeCents),[268,6268,52268,89788,89888,89988,91988]);assert.equal(r.lastDate,'2026-11-09');assert.equal(r.percent.toFixed(1),'1.9');
 });
-test('Nov 6 is one $375.20 day split $373.13 to Credit Card 2 and $2.07 to Credit Card 1',()=>{
+test('Nov 6 is one $375.20 day split $373.13 to the car loan and $2.07 to Credit Card 1',()=>{
  const r=C.report(),d=r.days.find(x=>x.date==='2026-11-06');assert.equal(d.amountCents,37520);assert.equal(r.days.length,7);
- assert.deepEqual(d.parts,[{account:'credit-card-2',label:'Credit Card 2',amountCents:37313},{account:'credit-card-1',label:'Credit Card 1',amountCents:207}]);
+ assert.deepEqual(d.parts,[{account:'car-loan',label:'Car loan',amountCents:37313},{account:'credit-card-1',label:'Credit Card 1',amountCents:207}]);
  assert.deepEqual(r.days.filter(x=>x.parts.length>1).map(x=>x.date),['2026-11-06']);for(const x of r.days)assert.equal(x.parts.reduce((s,p)=>s+p.amountCents,0),x.amountCents);
- const html=require('node:fs').readFileSync(require('node:path').join(__dirname,'..','daily-contributions.html'),'utf8');assert(html.includes('<dd class="contribution-amount">$375.20</dd>'));assert(html.includes('<p class="history-note contribution-split">Split: $373.13 to Credit Card 2 · $2.07 to Credit Card 1</p>'));
+ const html=require('node:fs').readFileSync(require('node:path').join(__dirname,'..','daily-contributions.html'),'utf8');assert(html.includes('<dd class="contribution-amount">$375.20</dd>'));assert(html.includes('<p class="history-note contribution-split">Split: $373.13 to Car loan · $2.07 to Credit Card 1</p>'));
 });
 test('canonical cumulative totals and journey days are exact',()=>{
  const r=C.report({...C.data,contributions:C.data.contributions.slice(0,6)});
@@ -39,15 +39,15 @@ test('four debt starting balances are defined once and add up to the $49,113.44 
 });
 test('per-debt paid and remaining derive from tagged entries and reconcile with overall totals',()=>{
  const r=C.report(),f=id=>r.accounts.find(a=>a.id===id);
- assert.deepEqual(r.accounts.map(a=>[a.id,a.startingCents,a.paidCents,a.remainingCents]),[['car-loan',1520913,0,1520913],['credit-card-1',61241,2407,58834],['student-loans',2967233,0,2967233],['credit-card-2',361957,89581,272376]]);
+ assert.deepEqual(r.accounts.map(a=>[a.id,a.startingCents,a.paidCents,a.remainingCents]),[['car-loan',1520913,37313,1483600],['credit-card-1',61241,2407,58834],['student-loans',2967233,0,2967233],['credit-card-2',361957,52268,309689]]);
  assert.equal(r.accounts.reduce((s,a)=>s+a.paidCents,0),r.paidCents);assert.equal(r.accounts.reduce((s,a)=>s+a.remainingCents,0),r.remainingCents);assert.equal(r.remainingCents,4819356);
- assert.equal(f('credit-card-2').percent.toFixed(1),'24.7');assert.equal(f('credit-card-1').percent.toFixed(1),'3.9');assert.equal(f('car-loan').percent,0);assert.equal(f('student-loans').percent,0);
+ assert.equal(f('credit-card-2').percent.toFixed(1),'14.4');assert.equal(f('credit-card-1').percent.toFixed(1),'3.9');assert.equal(f('car-loan').percent.toFixed(1),'2.5');assert.equal(f('student-loans').percent,0);
 });
 test('per-debt trackers list each debt\'s own dated contributions with running balance',()=>{
  const r=C.report(),f=id=>r.accounts.find(a=>a.id===id);
- assert.deepEqual(f('credit-card-2').days.map(d=>[d.date,d.amountCents,d.remainingCents]),[['2026-11-03',268,361689],['2026-11-04',6000,355689],['2026-11-05',46000,309689],['2026-11-06',37313,272376]]);
+ assert.deepEqual(f('credit-card-2').days.map(d=>[d.date,d.amountCents,d.remainingCents]),[['2026-11-03',268,361689],['2026-11-04',6000,355689],['2026-11-05',46000,309689]]);
  assert.deepEqual(f('credit-card-1').days.map(d=>[d.date,d.amountCents,d.remainingCents]),[['2026-11-06',207,61034],['2026-11-07',100,60934],['2026-11-08',100,60834],['2026-11-09',2000,58834]]);
- assert.deepEqual(f('car-loan').days,[]);assert.deepEqual(f('student-loans').days,[]);
+ assert.deepEqual(f('car-loan').days.map(d=>[d.date,d.amountCents,d.remainingCents]),[['2026-11-06',37313,1483600]]);assert.deepEqual(f('student-loans').days,[]);
 });
 test('every published contribution names a known account; untagged or unknown entries fail',()=>{
  for(const c of C.data.contributions)assert(C.data.accounts.some(a=>a.id===c.account),'untagged or unknown account on '+c.date);
