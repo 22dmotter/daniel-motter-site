@@ -156,8 +156,9 @@ function build() {
     + sections + '\n' + journey() + '\n<div class="disclaimer"><p><strong>Educational, not financial advice.</strong> These articles share general information and my own experience. Check current terms with your lender or a qualified professional before you make decisions.</p></div>\n</div>\n</main>\n' + footer() + '\n' + tail();
   fs.writeFileSync(path.join(OUT, 'index.html'), index);
   // Sitemap: every public page, lastmod from the last commit touching it (today if uncommitted changes).
-  const today = new Date().toISOString().slice(0, 10);
-  const lastmod = rel => { try { const dirty = cp.execFileSync('git', ['status', '--porcelain', '--', rel], { cwd: root, encoding: 'utf8' }).trim(); if (dirty) return today; const d = cp.execFileSync('git', ['log', '-1', '--format=%cs', '--', rel], { cwd: root, encoding: 'utf8' }).trim(); return d || today; } catch (e) { return today; } };
+  // Dates are in Daniel's time zone (America/New_York), not the build machine's UTC clock.
+  const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/New_York', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date());
+  const lastmod = rel => { try { const dirty = cp.execFileSync('git', ['status', '--porcelain', '--', rel], { cwd: root, encoding: 'utf8' }).trim(); if (dirty) return today; const d = cp.execFileSync('git', ['log', '-1', '--date=format-local:%Y-%m-%d', '--format=%cd', '--', rel], { cwd: root, encoding: 'utf8', env: { ...process.env, TZ: 'America/New_York' } }).trim(); return d || today; } catch (e) { return today; } };
   const rootPages = fs.readdirSync(root).filter(f => f.endsWith('.html') && f !== 'why-debt-is-bad.html').sort((a, b) => (a === 'index.html' ? -1 : b === 'index.html' ? 1 : a.localeCompare(b)));
   const entries = rootPages.map(f => [f === 'index.html' ? SITE : SITE + f, f]).concat([[indexUrl, 'blog/index.html']], posts.map(p => [SITE + 'blog/' + p.slug + '.html', 'blog/' + p.slug + '.html']));
   fs.writeFileSync(path.join(root, 'sitemap.xml'), '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + entries.map(([u, f]) => '  <url><loc>' + u + '</loc><lastmod>' + lastmod(f) + '</lastmod></url>').join('\n') + '\n</urlset>\n');

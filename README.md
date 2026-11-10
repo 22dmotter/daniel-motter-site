@@ -88,7 +88,7 @@ History checks: `node tests/debt-contributions.test.js`; optional simulated DOM 
 | `student-loans` | Student loans (combined) | $29,672.33 |
 | `credit-card-2` | Credit Card 2 | $3,619.57 |
 
-These add up to the overall starting debt of $49,113.44, and validation rejects the ledger if they don't. Every contribution names the account it paid. The Nov 3–6, 2026 contributions ($897.88) went to Credit Card 2, and the Nov 7 and Nov 8, 2026 $1.00 payments went to Credit Card 1. Each debt's remaining balance is its starting balance minus its tagged contributions, so the four debts always add up to the overall remaining total ($48,213.56 as of Nov 8, 2026). No balances are typed into `debt-breakdown.js`. That file only holds display details per account id: the itemized date and the student-loan subloans. Validation rejects:
+These add up to the overall starting debt of $49,113.44, and validation rejects the ledger if they don't. Every contribution names the account it paid. The Nov 3–6, 2026 contributions ($897.88) went to Credit Card 2, and the Nov 7 and Nov 8, 2026 $1.00 payments and the Nov 9, 2026 $20.00 payment went to Credit Card 1. Each debt's remaining balance is its starting balance minus its tagged contributions, so the four debts always add up to the overall remaining total ($48,193.56 as of Nov 9, 2026). No balances are typed into `debt-breakdown.js`. That file only holds display details per account id: the itemized date and the student-loan subloans. Validation rejects:
 - a contribution with no account or an unknown account
 - a debt paid beyond its starting balance
 - duplicate or malformed ids

@@ -24,7 +24,8 @@
       Object.freeze({ date: '2026-11-05', amountCents: 46000, account: 'credit-card-2' }),
       Object.freeze({ date: '2026-11-06', amountCents: 37520, account: 'credit-card-2' }),
       Object.freeze({ date: '2026-11-07', amountCents: 100, account: 'credit-card-1' }),
-      Object.freeze({ date: '2026-11-08', amountCents: 100, account: 'credit-card-1' })
+      Object.freeze({ date: '2026-11-08', amountCents: 100, account: 'credit-card-1' }),
+      Object.freeze({ date: '2026-11-09', amountCents: 2000, account: 'credit-card-1' })
     ])
   });
   function dateParts(s) {

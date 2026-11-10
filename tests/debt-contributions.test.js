@@ -11,10 +11,14 @@ test('five user-confirmed dates and amounts, including Nov 3 opening contributio
  const r=C.report({...C.data,contributions:C.data.contributions.slice(0,5)});
  assert.equal(r.paidCents,89888);assert.equal(r.remainingCents,4821456);assert.equal(r.startingCents,4911344);
 });
-test('current ledger adds Nov 8 $1.00 as Day 6: $899.88 paid, $48,213.56 left',()=>{
- const r=C.report();assert.equal(C.data.contributions.length,6);assert.deepEqual(C.data.contributions[5],tagged('2026-11-08',100,'credit-card-1'));
- assert.equal(r.paidCents,89988);assert.equal(r.remainingCents,4821356);assert.deepEqual(r.days.map(d=>d.journeyDay),[1,2,3,4,5,6]);
- assert.deepEqual(r.days.map(d=>d.cumulativeCents),[268,6268,52268,89788,89888,89988]);assert.equal(r.lastDate,'2026-11-08');
+test('Nov 8 $1.00 as Day 6 brought the total to $899.88 paid, $48,213.56 left',()=>{
+ const r=C.report({...C.data,contributions:C.data.contributions.slice(0,6)});assert.deepEqual(C.data.contributions[5],tagged('2026-11-08',100,'credit-card-1'));
+ assert.equal(r.paidCents,89988);assert.equal(r.remainingCents,4821356);assert.equal(r.lastDate,'2026-11-08');
+});
+test('current ledger adds Nov 9 $20.00 to Credit Card 1 as Day 7: $919.88 paid, $48,193.56 left',()=>{
+ const r=C.report();assert.equal(C.data.contributions.length,7);assert.deepEqual(C.data.contributions[6],tagged('2026-11-09',2000,'credit-card-1'));
+ assert.equal(r.paidCents,91988);assert.equal(r.remainingCents,4819356);assert.deepEqual(r.days.map(d=>d.journeyDay),[1,2,3,4,5,6,7]);
+ assert.deepEqual(r.days.map(d=>d.cumulativeCents),[268,6268,52268,89788,89888,89988,91988]);assert.equal(r.lastDate,'2026-11-09');assert.equal(r.percent.toFixed(1),'1.9');
 });
 test('canonical cumulative totals and journey days are exact',()=>{
  const r=C.report({...C.data,contributions:C.data.contributions.slice(0,5)});
@@ -29,14 +33,14 @@ test('four debt starting balances are defined once and add up to the $49,113.44 
 });
 test('per-debt paid and remaining derive from tagged entries and reconcile with overall totals',()=>{
  const r=C.report(),f=id=>r.accounts.find(a=>a.id===id);
- assert.deepEqual(r.accounts.map(a=>[a.id,a.startingCents,a.paidCents,a.remainingCents]),[['car-loan',1520913,0,1520913],['credit-card-1',61241,200,61041],['student-loans',2967233,0,2967233],['credit-card-2',361957,89788,272169]]);
- assert.equal(r.accounts.reduce((s,a)=>s+a.paidCents,0),r.paidCents);assert.equal(r.accounts.reduce((s,a)=>s+a.remainingCents,0),r.remainingCents);assert.equal(r.remainingCents,4821356);
- assert.equal(f('credit-card-2').percent.toFixed(1),'24.8');assert.equal(f('credit-card-1').percent.toFixed(1),'0.3');assert.equal(f('car-loan').percent,0);assert.equal(f('student-loans').percent,0);
+ assert.deepEqual(r.accounts.map(a=>[a.id,a.startingCents,a.paidCents,a.remainingCents]),[['car-loan',1520913,0,1520913],['credit-card-1',61241,2200,59041],['student-loans',2967233,0,2967233],['credit-card-2',361957,89788,272169]]);
+ assert.equal(r.accounts.reduce((s,a)=>s+a.paidCents,0),r.paidCents);assert.equal(r.accounts.reduce((s,a)=>s+a.remainingCents,0),r.remainingCents);assert.equal(r.remainingCents,4819356);
+ assert.equal(f('credit-card-2').percent.toFixed(1),'24.8');assert.equal(f('credit-card-1').percent.toFixed(1),'3.6');assert.equal(f('car-loan').percent,0);assert.equal(f('student-loans').percent,0);
 });
 test('per-debt trackers list each debt\'s own dated contributions with running balance',()=>{
  const r=C.report(),f=id=>r.accounts.find(a=>a.id===id);
  assert.deepEqual(f('credit-card-2').days.map(d=>[d.date,d.amountCents,d.remainingCents]),[['2026-11-03',268,361689],['2026-11-04',6000,355689],['2026-11-05',46000,309689],['2026-11-06',37520,272169]]);
- assert.deepEqual(f('credit-card-1').days.map(d=>[d.date,d.amountCents,d.remainingCents]),[['2026-11-07',100,61141],['2026-11-08',100,61041]]);
+ assert.deepEqual(f('credit-card-1').days.map(d=>[d.date,d.amountCents,d.remainingCents]),[['2026-11-07',100,61141],['2026-11-08',100,61041],['2026-11-09',2000,59041]]);
  assert.deepEqual(f('car-loan').days,[]);assert.deepEqual(f('student-loans').days,[]);
 });
 test('every published contribution names a known account; untagged or unknown entries fail',()=>{
