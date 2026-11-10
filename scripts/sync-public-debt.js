@@ -36,8 +36,12 @@ function balanceWarning() {
 function balanceStatus() {
   return '<p id="breakdown-status" class="history-note">'+(breakdown.mismatch ? 'Individual snapshots do not currently reconcile with the overall total.' : breakdown.unitemizedCents === 0 ? 'The current remaining total is fully itemized by these reported snapshots.' : 'This is a partial breakdown. The calculated remainder fills the gap to the current remaining total.')+'</p>';
 }
+function splitNote(d) {
+  if (!d.parts || d.parts.length < 2) return '';
+  return '<p class="history-note contribution-split">Split: ' + d.parts.map(p => C.money(p.amountCents) + ' to ' + escape(p.label)).join(' · ') + '</p>';
+}
 function records() {
-  return r.days.map(d => '  <li class="card contribution-record"><p class="tag">Day ' + d.journeyDay + '</p><h3><time datetime="' + d.date + '">' + C.formatDate(d.date) + '</time></h3><dl class="contribution-amounts"><div><dt>Reported that day</dt><dd class="contribution-amount">' + C.money(d.amountCents) + '</dd></div><div><dt>Cumulative paid</dt><dd>' + C.money(d.cumulativeCents) + '</dd></div><div><dt>Remaining*</dt><dd>' + C.money(d.remainingCents) + '</dd></div></dl></li>').join('\n');
+  return r.days.map(d => '  <li class="card contribution-record"><p class="tag">Day ' + d.journeyDay + '</p><h3><time datetime="' + d.date + '">' + C.formatDate(d.date) + '</time></h3><dl class="contribution-amounts"><div><dt>Reported that day</dt><dd class="contribution-amount">' + C.money(d.amountCents) + '</dd></div><div><dt>Cumulative paid</dt><dd>' + C.money(d.cumulativeCents) + '</dd></div><div><dt>Remaining*</dt><dd>' + C.money(d.remainingCents) + '</dd></div></dl>' + splitNote(d) + '</li>').join('\n');
 }
 // Blog pages (built by scripts/build-blog.js) carry the same journey classes, so keep them in sync too.
 const blogDir = path.join(root, 'blog');

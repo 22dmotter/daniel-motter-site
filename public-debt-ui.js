@@ -24,7 +24,9 @@
     [['Reported that day', record.amountCents, 'contribution-amount'], ['Cumulative paid', record.cumulativeCents, ''], ['Remaining*', record.remainingCents, '']].forEach(function (item) {
       var pair = el('div'); pair.append(el('dt', item[0]), el('dd', C.money(item[1]), item[2])); dl.appendChild(pair);
     });
-    li.appendChild(dl); fragment.appendChild(li);
+    li.appendChild(dl);
+    if (record.parts && record.parts.length > 1) li.appendChild(el('p', 'Split: ' + record.parts.map(function (p) { return C.money(p.amountCents) + ' to ' + p.label; }).join(' · '), 'history-note contribution-split'));
+    fragment.appendChild(li);
   });
   list.replaceChildren(fragment);
 }());

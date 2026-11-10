@@ -22,7 +22,9 @@
       Object.freeze({ date: '2026-11-03', amountCents: 268, account: 'credit-card-2' }),
       Object.freeze({ date: '2026-11-04', amountCents: 6000, account: 'credit-card-2' }),
       Object.freeze({ date: '2026-11-05', amountCents: 46000, account: 'credit-card-2' }),
-      Object.freeze({ date: '2026-11-06', amountCents: 37520, account: 'credit-card-2' }),
+      // Nov 6 was one $375.20 day split across two cards (Daniel, Nov 9, 2026).
+      Object.freeze({ date: '2026-11-06', amountCents: 37313, account: 'credit-card-2' }),
+      Object.freeze({ date: '2026-11-06', amountCents: 207, account: 'credit-card-1' }),
       Object.freeze({ date: '2026-11-07', amountCents: 100, account: 'credit-card-1' }),
       Object.freeze({ date: '2026-11-08', amountCents: 100, account: 'credit-card-1' }),
       Object.freeze({ date: '2026-11-09', amountCents: 2000, account: 'credit-card-1' })
@@ -62,7 +64,7 @@
     source = source || data;
     if (!Number.isSafeInteger(source.startingCents) || source.startingCents < 1 || !Array.isArray(source.contributions)) throw new Error('Invalid starting balance or ledger.');
     dateParts(source.journeyStart);
-    var byId = accountSetup(source), grouped = new Map(), paid = 0;
+    var byId = accountSetup(source), grouped = new Map(), parts = new Map(), paid = 0;
     source.contributions.forEach(function (c) {
       dateParts(c.date);
       if (c.date < source.journeyStart) throw new Error('Contribution cannot predate the journey.');
@@ -77,11 +79,17 @@
         a.contributions.push({ date: c.date, amountCents: c.amountCents });
       } else if (c.account !== undefined) throw new Error('Contribution names an account but the ledger defines none.');
       grouped.set(c.date, (grouped.get(c.date) || 0) + c.amountCents);
+      if (byId) {
+        // Per-day split by debt, so a day paid across several debts can be shown in parts.
+        var dayParts = parts.get(c.date) || [], label = byId.get(c.account).label, part = dayParts.filter(function (p) { return p.account === c.account; })[0];
+        if (part) part.amountCents += c.amountCents; else dayParts.push({ account: c.account, label: label, amountCents: c.amountCents });
+        parts.set(c.date, dayParts);
+      }
     });
     var cumulative = 0;
     var days = Array.from(grouped.keys()).sort().map(function (date) {
       var amount = grouped.get(date); cumulative += amount;
-      return { date: date, amountCents: amount, cumulativeCents: cumulative, remainingCents: source.startingCents - cumulative, journeyDay: journeyDay(date, source.journeyStart) };
+      return { date: date, amountCents: amount, cumulativeCents: cumulative, remainingCents: source.startingCents - cumulative, journeyDay: journeyDay(date, source.journeyStart), parts: parts.get(date) || [] };
     });
     var accounts = byId ? Array.from(byId.values()).map(function (a) {
       var dayMap = new Map();
