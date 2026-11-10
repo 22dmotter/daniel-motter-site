@@ -53,7 +53,7 @@
       if (item.startingCents !== undefined) {
         if (!Number.isSafeInteger(item.startingCents) || !Number.isSafeInteger(item.paidCents) || item.paidCents < 0 || item.startingCents - item.paidCents !== item.balanceCents) throw new Error('Starting balance minus paid must equal the remaining balance.');
         result.id = item.id; result.startingCents = item.startingCents; result.paidCents = item.paidCents; result.percent = item.percent;
-        result.days = (item.days || []).map(function (d) { C.formatDate(d.date); return { date: d.date, amountCents: d.amountCents, cumulativeCents: d.cumulativeCents, remainingCents: d.remainingCents }; });
+        result.days = (item.days || []).map(function (d) { C.formatDate(d.date); var row = { date: d.date, amountCents: d.amountCents, cumulativeCents: d.cumulativeCents, remainingCents: d.remainingCents }; if (d.note !== undefined) row.note = String(d.note); return row; });
       }
       if (item.included !== undefined) {
         if (!Array.isArray(item.included) || !item.included.length) throw new Error('Included balances must be a nonempty list.');

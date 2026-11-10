@@ -18,6 +18,7 @@
       Object.freeze({ id: 'credit-card-2', label: 'Credit Card 2', startingCents: 361957 })
     ]),
     // Every contribution names the account id it paid. Untagged or unknown ids are rejected.
+    // An optional plain-text note (1–80 characters) labels an entry, e.g. an extra reconciliation payment.
     contributions: Object.freeze([
       Object.freeze({ date: '2026-11-03', amountCents: 268, account: 'credit-card-2' }),
       Object.freeze({ date: '2026-11-04', amountCents: 6000, account: 'credit-card-2' }),
@@ -27,7 +28,11 @@
       Object.freeze({ date: '2026-11-06', amountCents: 207, account: 'credit-card-1' }),
       Object.freeze({ date: '2026-11-07', amountCents: 100, account: 'credit-card-1' }),
       Object.freeze({ date: '2026-11-08', amountCents: 100, account: 'credit-card-1' }),
-      Object.freeze({ date: '2026-11-09', amountCents: 2000, account: 'credit-card-1' })
+      Object.freeze({ date: '2026-11-09', amountCents: 2000, account: 'credit-card-1' }),
+      // Nov 10: today's $1,477.32 payment, plus a $222.04 extra payment Daniel added because his original
+      // Credit Card 2 starting figure was off; together they bring the card to the $1,397.53 he reported (Daniel, Nov 10, 2026).
+      Object.freeze({ date: '2026-11-10', amountCents: 147732, account: 'credit-card-2' }),
+      Object.freeze({ date: '2026-11-10', amountCents: 22204, account: 'credit-card-2', note: 'Extra payment (balance reconciliation)' })
     ])
   });
   function dateParts(s) {
@@ -64,11 +69,12 @@
     source = source || data;
     if (!Number.isSafeInteger(source.startingCents) || source.startingCents < 1 || !Array.isArray(source.contributions)) throw new Error('Invalid starting balance or ledger.');
     dateParts(source.journeyStart);
-    var byId = accountSetup(source), grouped = new Map(), parts = new Map(), paid = 0;
+    var byId = accountSetup(source), grouped = new Map(), parts = new Map(), notes = new Map(), paid = 0;
     source.contributions.forEach(function (c) {
       dateParts(c.date);
       if (c.date < source.journeyStart) throw new Error('Contribution cannot predate the journey.');
       if (!Number.isSafeInteger(c.amountCents) || c.amountCents <= 0) throw new Error('Contribution amounts must be positive whole cents.');
+      if (c.note !== undefined && (typeof c.note !== 'string' || !c.note.trim() || c.note !== c.note.trim() || c.note.length > 80 || /[\u0000-\u001f\u007f]/.test(c.note))) throw new Error('A contribution note must be plain text of 1–80 characters.');
       paid += c.amountCents;
       if (!Number.isSafeInteger(paid) || paid > source.startingCents) throw new Error('Reported contributions exceed the starting balance; reconcile the ledger before publishing.');
       if (byId) {
@@ -76,9 +82,10 @@
         if (!a) throw new Error('Each contribution must name a known account id (for example credit-card-1).');
         a.paidCents += c.amountCents;
         if (a.paidCents > a.startingCents) throw new Error('Contributions to ' + a.label + ' exceed its starting balance; reconcile before publishing.');
-        a.contributions.push({ date: c.date, amountCents: c.amountCents });
+        a.contributions.push(c.note === undefined ? { date: c.date, amountCents: c.amountCents } : { date: c.date, amountCents: c.amountCents, note: c.note });
       } else if (c.account !== undefined) throw new Error('Contribution names an account but the ledger defines none.');
       grouped.set(c.date, (grouped.get(c.date) || 0) + c.amountCents);
+      if (c.note !== undefined) notes.set(c.date, (notes.get(c.date) || []).concat([{ account: c.account, label: byId ? byId.get(c.account).label : null, amountCents: c.amountCents, note: c.note }]));
       if (byId) {
         // Per-day split by debt, so a day paid across several debts can be shown in parts.
         var dayParts = parts.get(c.date) || [], label = byId.get(c.account).label, part = dayParts.filter(function (p) { return p.account === c.account; })[0];
@@ -89,14 +96,15 @@
     var cumulative = 0;
     var days = Array.from(grouped.keys()).sort().map(function (date) {
       var amount = grouped.get(date); cumulative += amount;
-      return { date: date, amountCents: amount, cumulativeCents: cumulative, remainingCents: source.startingCents - cumulative, journeyDay: journeyDay(date, source.journeyStart), parts: parts.get(date) || [] };
+      return { date: date, amountCents: amount, cumulativeCents: cumulative, remainingCents: source.startingCents - cumulative, journeyDay: journeyDay(date, source.journeyStart), parts: parts.get(date) || [], notes: notes.get(date) || [] };
     });
     var accounts = byId ? Array.from(byId.values()).map(function (a) {
-      var dayMap = new Map();
-      a.contributions.forEach(function (c) { dayMap.set(c.date, (dayMap.get(c.date) || 0) + c.amountCents); });
-      var running = 0, history = Array.from(dayMap.keys()).sort().map(function (date) {
-        var amount = dayMap.get(date); running += amount;
-        return { date: date, amountCents: amount, cumulativeCents: running, remainingCents: a.startingCents - running };
+      // One tracker row per recorded payment (in date order), so two payments on one day count as two.
+      var running = 0, history = a.contributions.map(function (c, i) { return { c: c, i: i }; }).sort(function (x, y) { return x.c.date < y.c.date ? -1 : x.c.date > y.c.date ? 1 : x.i - y.i; }).map(function (x) {
+        running += x.c.amountCents;
+        var row = { date: x.c.date, amountCents: x.c.amountCents, cumulativeCents: running, remainingCents: a.startingCents - running };
+        if (x.c.note !== undefined) row.note = x.c.note;
+        return row;
       });
       return { id: a.id, label: a.label, startingCents: a.startingCents, paidCents: a.paidCents, remainingCents: a.startingCents - a.paidCents, percent: a.startingCents ? a.paidCents / a.startingCents * 100 : 100, days: history };
     }) : null;

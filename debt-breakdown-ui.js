@@ -26,7 +26,9 @@
       var ol = el('ol', undefined, 'account-history');
       item.days.forEach(function (d) {
         var row = el('li'), t = el('time', C.formatDate(d.date)); t.dateTime = d.date;
-        row.append(t, el('span', C.money(d.amountCents), 'account-contribution'), el('span', C.money(d.remainingCents) + ' left on this debt', 'account-history-left'));
+        row.append(t, el('span', C.money(d.amountCents), 'account-contribution'));
+        if (d.note) row.appendChild(el('span', d.note, 'account-note'));
+        row.append(el('span', C.money(d.remainingCents) + ' left on this debt', 'account-history-left'));
         ol.appendChild(row);
       });
       tracker.appendChild(ol);

@@ -13,7 +13,7 @@ function progressBlock(d) {
   // Every debt's tracker is a native disclosure, closed by default (never emit an open attribute).
   const tracker = '<details class="account-tracker"><summary>' + escape(d.label) + ' contribution tracker (' + d.days.length + (d.days.length === 1 ? ' payment' : ' payments') + ')</summary>'
     + (d.days.length
-      ? '<ol class="account-history">' + d.days.map(h => '<li><time datetime="' + h.date + '">' + C.formatDate(h.date) + '</time><span class="account-contribution">' + C.money(h.amountCents) + '</span><span class="account-history-left">' + C.money(h.remainingCents) + ' left on this debt</span></li>').join('') + '</ol>'
+      ? '<ol class="account-history">' + d.days.map(h => '<li><time datetime="' + h.date + '">' + C.formatDate(h.date) + '</time><span class="account-contribution">' + C.money(h.amountCents) + '</span>' + (h.note ? '<span class="account-note">' + escape(h.note) + '</span>' : '') + '<span class="account-history-left">' + C.money(h.remainingCents) + ' left on this debt</span></li>').join('') + '</ol>'
       : '<p class="history-note account-empty">No contributions recorded yet.</p>')
     + '</details>';
   return '<div class="account-progress"><div class="account-bar" role="progressbar" aria-labelledby="' + nameId + '" aria-valuemin="0" aria-valuemax="100" aria-valuenow="' + pct + '" aria-valuetext="' + escape(valueText) + '"><i style="width:' + Math.min(100, d.percent).toFixed(6) + '%"></i></div><p class="account-pct"><span class="account-pct-value">' + pct + '%</span> paid off</p></div>'
@@ -40,8 +40,12 @@ function splitNote(d) {
   if (!d.parts || d.parts.length < 2) return '';
   return '<p class="history-note contribution-split">Split: ' + d.parts.map(p => C.money(p.amountCents) + ' to ' + escape(p.label)).join(' · ') + '</p>';
 }
+function noteLine(d) {
+  if (!d.notes || !d.notes.length) return '';
+  return d.notes.map(n => '<p class="history-note contribution-note">Includes ' + C.money(n.amountCents) + (n.label ? ' to ' + escape(n.label) : '') + ': ' + escape(n.note) + '</p>').join('');
+}
 function records() {
-  return r.days.map(d => '  <li class="card contribution-record"><p class="tag">Day ' + d.journeyDay + '</p><h3><time datetime="' + d.date + '">' + C.formatDate(d.date) + '</time></h3><dl class="contribution-amounts"><div><dt>Reported that day</dt><dd class="contribution-amount">' + C.money(d.amountCents) + '</dd></div><div><dt>Cumulative paid</dt><dd>' + C.money(d.cumulativeCents) + '</dd></div><div><dt>Remaining*</dt><dd>' + C.money(d.remainingCents) + '</dd></div></dl>' + splitNote(d) + '</li>').join('\n');
+  return r.days.map(d => '  <li class="card contribution-record"><p class="tag">Day ' + d.journeyDay + '</p><h3><time datetime="' + d.date + '">' + C.formatDate(d.date) + '</time></h3><dl class="contribution-amounts"><div><dt>Reported that day</dt><dd class="contribution-amount">' + C.money(d.amountCents) + '</dd></div><div><dt>Cumulative paid</dt><dd>' + C.money(d.cumulativeCents) + '</dd></div><div><dt>Remaining*</dt><dd>' + C.money(d.remainingCents) + '</dd></div></dl>' + splitNote(d) + noteLine(d) + '</li>').join('\n');
 }
 // Blog pages (built by scripts/build-blog.js) carry the same journey classes, so keep them in sync too.
 const blogDir = path.join(root, 'blog');

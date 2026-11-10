@@ -47,7 +47,7 @@ details.account-tracker summary:focus-visible{outline:3px solid #ff7a59;outline-
 details.account-tracker .account-history,details.account-tracker .account-empty{margin-top:12px}
 .account-history{list-style:none;display:grid;gap:8px;margin:0;padding:0}
 .account-history li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 12px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;min-width:0}
-.account-history time{font-weight:600;overflow-wrap:anywhere}.account-history-left{grid-column:1/-1;font-size:.85rem;overflow-wrap:anywhere}
+.account-history time{font-weight:600;overflow-wrap:anywhere}.account-note{grid-column:1/-1;font-size:.85rem;color:var(--muted,#b9b9c3);overflow-wrap:anywhere}.account-history-left{grid-column:1/-1;font-size:.85rem;overflow-wrap:anywhere}
 .account-empty{font-size:.9rem}
 .account-paid,.account-contribution{color:#22c55e}
 #debt-breakdown-page .account-start,

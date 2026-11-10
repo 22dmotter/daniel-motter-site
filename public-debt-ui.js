@@ -26,6 +26,7 @@
     });
     li.appendChild(dl);
     if (record.parts && record.parts.length > 1) li.appendChild(el('p', 'Split: ' + record.parts.map(function (p) { return C.money(p.amountCents) + ' to ' + p.label; }).join(' · '), 'history-note contribution-split'));
+    (record.notes || []).forEach(function (n) { li.appendChild(el('p', 'Includes ' + C.money(n.amountCents) + (n.label ? ' to ' + n.label : '') + ': ' + n.note, 'history-note contribution-note')); });
     fragment.appendChild(li);
   });
   list.replaceChildren(fragment);
