@@ -32,7 +32,9 @@
       // Nov 10: today's $1,477.32 payment, plus a $222.04 extra payment Daniel added because his original
       // Credit Card 2 starting figure was off; together they bring the card to the $1,397.53 he reported (Daniel, Nov 10, 2026).
       Object.freeze({ date: '2026-11-10', amountCents: 147732, account: 'credit-card-2' }),
-      Object.freeze({ date: '2026-11-10', amountCents: 22204, account: 'credit-card-2', note: 'Extra payment (balance reconciliation)' })
+      Object.freeze({ date: '2026-11-10', amountCents: 22204, account: 'credit-card-2', note: 'Extra payment (balance reconciliation)' }),
+      Object.freeze({ date: '2026-11-11', amountCents: 100, account: 'credit-card-1' }),
+      Object.freeze({ date: '2026-11-12', amountCents: 2000, account: 'credit-card-1' })
     ])
   });
   function dateParts(s) {
